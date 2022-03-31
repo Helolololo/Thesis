@@ -1,0 +1,20 @@
+{
+  "name": "mir",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "server": "npx nodemon server.js",
+    "client": "node client.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "eslint": "^8.11.0",
+    "express": "^4.17.3",
+    "joi": "^17.6.0",
+    "nodemon": "^2.0.15"
+  }
+}
