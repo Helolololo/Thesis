@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "cli": "^1.0.1",
+    "json-server": "^0.17.0",
     "vue": "^3.2.31"
   }
 }
