@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <div class="container">
+      <AddTodo />
+      <FilterTodos />
       <TodosElement />
     </div>
   </div>
@@ -8,11 +10,15 @@
 
 <script>
 import TodosElement from "./components/Todos.vue";
+import AddTodo from "./components/AddTodo.vue";
+import FilterTodos from "./components/FilterTodos.vue";
 
 export default {
   name: "App",
   components: {
     TodosElement,
+    AddTodo,
+    FilterTodos,
   },
 };
 </script>
