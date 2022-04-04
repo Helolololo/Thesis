@@ -1,7 +1,11 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <Button text="Change Missions" color="steelblue" />
+    <Button
+      @button-click="$emit('toggle-add-mission')"
+      :text="showMission ? 'Close' : 'Add Mission'"
+      :color="showMission ? 'lightslategray' : '#1c3448'"
+    />
   </header>
 </template>
 
@@ -12,6 +16,7 @@ export default {
   name: "Header",
   props: {
     title: String,
+    showMission: Boolean,
   },
   components: {
     Button,

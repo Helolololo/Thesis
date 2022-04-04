@@ -1,11 +1,15 @@
 <template>
-  <div :key="mission.id" v-for="mission in missions">
-    <Mission :mission="mission" />
+  <div v-for="mission in missions" :key="mission.id">
+    <Mission
+      @delete-mission="$emit('delete-mission', mission.id)"
+      :mission="mission"
+    />
   </div>
 </template>
 
 <script>
 import Mission from "./Mission";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Missions",
@@ -15,6 +19,8 @@ export default {
   components: {
     Mission,
   },
+  emits: ["delete-mission"],
+  computed: mapGetters(["showMissions"]),
 };
 </script>
 

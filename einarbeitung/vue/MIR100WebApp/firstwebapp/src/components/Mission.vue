@@ -2,7 +2,10 @@
   <div class="mission">
     <h3>
       Name: {{ mission.name }}
-      <i class="fas fa-trash-alt"></i>
+      <i
+        @click="$emit('delete-mission', mission.id)"
+        class="fas fa-trash-alt"
+      ></i>
     </h3>
     <p>GUID: {{ mission.id }}</p>
   </div>

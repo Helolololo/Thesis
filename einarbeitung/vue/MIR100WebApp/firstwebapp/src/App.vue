@@ -1,27 +1,51 @@
 <template>
-  <div class="container">
-    <Header title="MIR 100 Missions" />
-    <Missions :missions="missions" />
+  <div class="box">
+    <Header
+      @toggle-add-mission="toggleAddMission"
+      title="MIR 100 Missions"
+      :showMission="showMission"
+    />
+    <div v-show="showMission">
+      <AddMission @add-mission="addMission" />
+    </div>
+
+    <Missions @delete-mission="deleteMission" :missions="missions" />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header";
 import Missions from "./components/Missions";
+import AddMission from "./components/AddMission";
 
 export default {
   name: "App",
   components: {
     Header,
     Missions,
+    AddMission,
   },
   data() {
     return {
       missions: [],
+      showMission: false,
     };
   },
+  methods: {
+    toggleAddMission() {
+      this.showMission = !this.showMission;
+    },
+    addMission(mission) {
+      this.missions = [...this.missions, mission];
+    },
+    deleteMission(id) {
+      if (confirm("Delete the task")) {
+        this.missions = this.missions.filter((mission) => mission.id !== id); // show every mission except the deleted one
+        console.log(this.mission);
+      }
+    },
+  },
   created() {
-    console.log("created");
     // life-cycle method used for http requests
     this.missions = [
       {
@@ -54,7 +78,7 @@ export default {
 body {
   font-family: "Poppins", sans-serif;
 }
-.container {
+.box {
   max-width: 1200px;
   margin: 30px auto;
   overflow: auto;
@@ -84,6 +108,7 @@ body {
 }
 .btn-block {
   display: block;
+  background: #1c3448;
   width: 100%;
 }
 </style>
