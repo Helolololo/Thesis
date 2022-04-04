@@ -18,6 +18,8 @@ import Header from "./components/Header";
 import Missions from "./components/Missions";
 import AddMission from "./components/AddMission";
 
+const HOST = "http://localhost:5000";
+
 export default {
   name: "App",
   components: {
@@ -36,19 +38,19 @@ export default {
       this.showMission = !this.showMission;
     },
     async fetchMissions() {
-      const res = await fetch("http://localhost:5000/missions");
+      const res = await fetch(HOST + "/missions");
       const data = await res.json();
 
       return data;
     },
     async fetchMission(id) {
-      const res = await fetch(`http://localhost:5000/missions/${id}`);
+      const res = await fetch(HOST + `/missions/${id}`);
       const data = await res.json();
 
       return data;
     },
     async addMission(mission) {
-      const res = await fetch("http://localhost:5000/missions", {
+      const res = await fetch(HOST + "/missions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +65,7 @@ export default {
 
     async deleteMission(id) {
       if (confirm("Delete the task")) {
-        const res = await fetch(`http://localhost:5000/missions/${id}`, {
+        const res = await fetch(HOST + `/missions/${id}`, {
           method: "DELETE",
         });
 
