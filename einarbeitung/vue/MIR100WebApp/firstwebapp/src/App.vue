@@ -35,35 +35,49 @@ export default {
     toggleAddMission() {
       this.showMission = !this.showMission;
     },
-    addMission(mission) {
-      this.missions = [...this.missions, mission];
+    async fetchMissions() {
+      const res = await fetch("http://localhost:5000/missions");
+      const data = await res.json();
+
+      return data;
     },
-    deleteMission(id) {
+    async fetchMission(id) {
+      const res = await fetch(`http://localhost:5000/missions/${id}`);
+      const data = await res.json();
+
+      return data;
+    },
+    async addMission(mission) {
+      const res = await fetch("http://localhost:5000/missions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mission),
+      });
+
+      const data = await res.json();
+
+      this.missions = [...this.missions, data];
+    },
+
+    async deleteMission(id) {
       if (confirm("Delete the task")) {
-        this.missions = this.missions.filter((mission) => mission.id !== id); // show every mission except the deleted one
-        console.log(this.mission);
+        const res = await fetch(`http://localhost:5000/missions/${id}`, {
+          method: "DELETE",
+        });
+
+        res.status === 200
+          ? (this.missions = this.missions.filter(
+              (mission) => mission.id !== id
+            )) // show every mission except the deleted one
+          : alert("Error can not delete the mission");
       }
     },
   },
-  created() {
+  async created() {
     // life-cycle method used for http requests
-    this.missions = [
-      {
-        id: "6e8dbeaa-79f2-11ec-95f0-94c691a3e2dc",
-        name: "Laden fahren",
-        url: "/v2.0.0/missions/6e8dbeaa-79f2-11ec-95f0-94c691a3e2dc",
-      },
-      {
-        id: "56f192d2-a45b-11ec-8ad2-94c691a3e2dc",
-        name: "Gebinde Aufnahme Abgabe Test",
-        url: "/v2.0.0/missions/56f192d2-a45b-11ec-8ad2-94c691a3e2dc",
-      },
-      {
-        id: "ad397606-a5bd-11ec-afc4-94c691a3e2dc",
-        name: "Gebindeabgabe",
-        url: "/v2.0.0/missions/ad397606-a5bd-11ec-afc4-94c691a3e2dc",
-      },
-    ];
+    this.missions = await this.fetchMissions();
   },
 };
 </script>

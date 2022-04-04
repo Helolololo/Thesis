@@ -27,7 +27,6 @@ export default {
 
       // add new mission
       const newMission = {
-        id: Math.floor(Math.random() * 100000),
         name: this.name,
       };
 
