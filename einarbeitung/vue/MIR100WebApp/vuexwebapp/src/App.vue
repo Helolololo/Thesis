@@ -2,24 +2,26 @@
   <div id="app">
     <div class="box">
       <h1>MIR 100 Missions</h1>
+      <AddMission />
       <Missions />
     </div>
   </div>
 </template>
 
 <script>
-import Missions from "./components/Missions.vue";
+import Missions from "./components/Missions";
+import AddMission from "./components/AddMission";
 
 export default {
   name: "app",
   components: {
     Missions,
+    AddMission,
   },
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
 * {
   box-sizing: border-box;
   margin: 0;

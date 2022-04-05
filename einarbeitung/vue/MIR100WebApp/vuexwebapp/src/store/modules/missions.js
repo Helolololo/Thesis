@@ -16,10 +16,17 @@ export const actions = {
         commit("setMissions", res.data);
     },
 
+    async addMission({ commit }, name) {
+        const res = await axios.post("http://localhost:3000/missions", name);
+
+        commit("newMission", res.data);
+    },
+
 };
 
 export const mutations = {
-    setMissions: (state, missions) => (state.missions = missions)
+    setMissions: (state, missions) => (state.missions = missions),
+    newMission: (state, mission) => state.missions.push(mission),
 };
 
 export default {

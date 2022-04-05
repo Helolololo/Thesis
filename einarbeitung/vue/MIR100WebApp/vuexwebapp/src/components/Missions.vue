@@ -28,13 +28,13 @@ export default {
 <style scope >
 i {
   color: lightslategray;
-  cursor: pointer;
+  cursor: default;
 }
 .mission {
   background: #f4f4f4;
   margin: 5px;
   padding: 15px 20px;
-  cursor: pointer;
+  cursor: default;
 }
 .mission h3 {
   display: flex;
