@@ -25,7 +25,6 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       this.addMission(this.name);
-      console.log("AddMission - OnSubmit");
     },
   },
 };

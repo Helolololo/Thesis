@@ -1,5 +1,8 @@
 import axios from "axios";
 
+
+const SERVER = "http://localhost:3000";
+
 export const state = {
     missions: []
 };
@@ -11,17 +14,27 @@ export const getters = {
 
 export const actions = {
     async fetchMissions({ commit }) {
-        const res = await axios.get("http://localhost:3000/missions");
+        const res = await axios.get(SERVER + "/missions");
 
         commit("setMissions", res.data);
     },
 
     async addMission({ commit }, name) {
-        const res = await axios.post("http://localhost:3000/missions", name);
+        const res = await axios.post(SERVER + "/missions",
+            {
+                name: name      // TO FIX: ID shall be added before name!
+            });
 
         commit("newMission", res.data);
     },
 
+    async deleteMission({ commit }, id) {
+        if (confirm("Delete the task")) {
+            await axios.delete(SERVER + `/missions/${id}`);
+
+            commit('removeMission', id);
+        }
+    }
 };
 
 export const mutations = {

@@ -2,7 +2,10 @@
   <div>
     <div class="missions">
       <div v-for="mission in allMissions" :key="mission.id" class="mission">
-        <h3>Name: {{ mission.name }}</h3>
+        <h3>
+          Name: {{ mission.name }}
+          <i class="fas fa-trash-alt"></i>
+        </h3>
         <p>GUID: {{ mission.id }}</p>
       </div>
     </div>
