@@ -1,33 +1,26 @@
 import axios from "axios";
 
 export const state = {
-    missions: [
-        {
-            id: "6e8dbeaa-79f2-11ec-95f0-94c691a3e2dc",
-            name: "Laden fahren",
-            url: "/v2.0.0/missions/6e8dbeaa-79f2-11ec-95f0-94c691a3e2dc"
-        },
-        {
-            id: "56f192d2-a45b-11ec-8ad2-94c691a3e2dc",
-            name: "Gebinde Aufnahme Abgabe Test",
-            url: "/v2.0.0/missions/56f192d2-a45b-11ec-8ad2-94c691a3e2dc"
-        },
-        {
-            id: "ad397606-a5bd-11ec-afc4-94c691a3e2dc",
-            name: "Gebindeabgabe",
-            url: "/v2.0.0/missions/ad397606-a5bd-11ec-afc4-94c691a3e2dc"
-        }
-    ]
+    missions: []
 };
 
 export const getters = {
-    fetchMissions(state) { return state.missions }
-    // fetchMissions: (state) => console.log(state) // state.missions
+    allMissions(state) { return state.missions }
+    // allMissions: (state) => console.log(state) // state.missions
 };
 
-export const actions = {};
+export const actions = {
+    async fetchMissions({ commit }) {
+        const res = await axios.get("http://localhost:3000/missions");
 
-export const mutations = {};
+        commit("setMissions", res.data);
+    },
+
+};
+
+export const mutations = {
+    setMissions: (state, missions) => (state.missions = missions)
+};
 
 export default {
     state,

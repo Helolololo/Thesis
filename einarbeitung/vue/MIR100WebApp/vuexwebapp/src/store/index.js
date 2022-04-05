@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { state, getters } from './modules/missions';
+import { state, getters, actions, mutations } from './modules/missions';
 
 // Create Store
-export const store = createStore({ state, getters })
+export const store = createStore({ state, getters, actions, mutations })

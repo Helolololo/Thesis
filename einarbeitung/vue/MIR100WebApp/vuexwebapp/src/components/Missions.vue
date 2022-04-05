@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="missions">
-      <div v-for="mission in fetchMissions" :key="mission.id" class="mission">
+      <div v-for="mission in allMissions" :key="mission.id" class="mission">
         <h3>Name: {{ mission.name }}</h3>
         <p>GUID: {{ mission.id }}</p>
       </div>
@@ -10,11 +10,18 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Missions",
-  computed: mapGetters(["fetchMissions"]),
+  methods: {
+    ...mapActions(["fetchMissions"]),
+  },
+  computed: mapGetters(["allMissions"]),
+  // life-cylce method
+  created() {
+    this.fetchMissions();
+  },
 };
 </script>
 
