@@ -24,7 +24,18 @@ export default {
     ...mapActions(["addMission"]),
     onSubmit(e) {
       e.preventDefault();
+
+      // No mission name entered handling
+      if (!this.name) {
+        alert("Please add a mission");
+        return;
+      }
+
+      // add new mission
       this.addMission(this.name);
+
+      // clear form
+      this.name = "";
     },
   },
 };

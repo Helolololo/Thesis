@@ -22,7 +22,7 @@ export const actions = {
     async addMission({ commit }, name) {
         const res = await axios.post(SERVER + "/missions",
             {
-                name: name      // TO FIX: ID shall be added before name!
+                name: name
             });
 
         commit("newMission", res.data);
