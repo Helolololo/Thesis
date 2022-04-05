@@ -4,7 +4,7 @@
       <div v-for="mission in allMissions" :key="mission.id" class="mission">
         <h3>
           Name: {{ mission.name }}
-          <i class="fas fa-trash-alt"></i>
+          <i @click="deleteMission(mission.id)" class="fas fa-trash-alt"></i>
         </h3>
         <p>GUID: {{ mission.id }}</p>
       </div>
@@ -18,7 +18,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Missions",
   methods: {
-    ...mapActions(["fetchMissions"]),
+    ...mapActions(["fetchMissions", "deleteMission"]),
   },
   computed: mapGetters(["allMissions"]),
   // life-cylce method

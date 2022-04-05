@@ -40,6 +40,7 @@ export const actions = {
 export const mutations = {
     setMissions: (state, missions) => (state.missions = missions),
     newMission: (state, mission) => state.missions.push(mission),
+    removeMission: (state, id) => state.missions = state.missions.filter(mission => mission.id !== id),
 };
 
 export default {
