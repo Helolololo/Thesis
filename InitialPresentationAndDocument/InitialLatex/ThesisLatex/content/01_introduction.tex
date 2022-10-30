@@ -32,7 +32,7 @@ Different communication protocols and standards for industry 4.0 are under devel
 
 \newpage
 
-This thesis is written by Mai Khanh Isabelle Wilhelm at the SNET chair of the TU Berlin in cooperation with the BASF Group which is an industry leader in chemistry. The main goal of the thesis is to build a middleware that allows a superordinate application to control two mobile robots from different vendors. To control the mobile robots the Business Process Management (BPM) system PROCEED\footnote{Business Process Management system PROCEED \url{https://docs.proceed-labs.org/}} will be used. It has been developed at the SNET chair at TU Berlin. BPM systems aim to improve business processes by modeling, analyzing, optimizing, and automating the processes. 
+This thesis is written by Mai Khanh Isabelle Wilhelm at the SNET chair of the TU Berlin in cooperation with the BASF Group which is an industry leader in chemistry. The main goal of the thesis is to build a middleware that allows a controlling application to control two mobile robots from different vendors. To control the mobile robots the Business Process Management (BPM) system PROCEED\footnote{Business Process Management system PROCEED \url{https://docs.proceed-labs.org/}} will be used. It has been developed at the SNET chair at TU Berlin. BPM systems aim to improve business processes by modeling, analyzing, optimizing, and automating the processes. 
 
 Figure ~\ref{fig:introduction__middleware} on page ~\pageref{fig:introduction__middleware} shows a first, general concept for this thesis. The controlling application PROCEED (blue rectangle) will communicate with the mobile robots from different vendors through the middleware (red rectangle) and vice versa. The middleware has on one side an interface towards PROCEED following a communication standard (represented by the Standardized Interface) and has on the other side adapters for every mobile robot to address the different, proprietary interfaces (represented by the Vendor-dependent Interface) of two mobile robots: the MiR100\footnote{MiR100 \url{https://www.mobile-industrial-robots.com/solutions/robots/mir100/}} (yellow rectangle) and the RoboMaster S1\footnote{RoboMaster S1 \url{https://www.dji.com/de/robomaster-s1}} (green rectangle).  The middleware, therefore, acts as a translator for the interface of a controlling application (e.g. PROCEED) and the mobile robots from different vendors. 
 
@@ -40,7 +40,7 @@ Figure ~\ref{fig:introduction__middleware} on page ~\pageref{fig:introduction__m
 	\centering
 	\includegraphics[width=0.4\textwidth]{images/Middleware.png}\\
 	\caption[Compact Routing Example]%
-    {General concept of a middleware to enable multi-vendor mobile robot communication}
+    {Concept of a middleware to enable multi-vendor mobile robot communication}
 	\label{fig:introduction__middleware}
 \end{figure}
 
@@ -62,25 +62,28 @@ From the first draft of a concept arise the following research questions:
    \item \textbf{RQ1 - How to design a middleware to enable communication of mobile robots from different vendors and a controlling application such as PROCEED?} \hfill \\ 
 The focus of this research question is to simplify the integration of multiple mobile robots from different vendors. This research question also covers the state-of-the-art for multi-vendor mobile robots approaches and it leads to the following research questions.
 \begin{itemize}
-
-     \item \textbf{RQ1}
-     \item \textbf{RQ1}
-     \item \textbf{RQ1}
-     \item \textbf{RQ1}
-     \item \textbf{RQ1}
-     \item \textbf{RQ 2.4 - With which principle: push or pull should the middleware communicate with the mobile robots?} \hfill \\ 
-The push principle in communication is that the mobile robots communicate status information such as their current position to PROCEED through the middleware without any request for information. This information can be sent cyclic, e.g. the mobile robot can update its information to the middleware every 10 seconds. The other principle is the pull principle. For this principle, messages are sent when they have been requested by the superordinate entity (PROCEED). It needs to be identified which principle will be used for the mobile robots and the middleware.
-   \item \textbf{RQ1}
+     \item \textbf{RQ 1.1 - With which principle: push or pull should the middleware communicate with the mobile robots?} \hfill \\ 
+The push principle in communication is that the mobile robots communicate status information such as their current position to the controlling application through the middleware without any request for information. This information can be sent cyclic, e.g. the mobile robot can update its information to the middleware every 10 seconds. The other principle is the pull principle. For this principle, messages are sent when they have been requested by the controlling application. It needs to be identified which principle will be used for the mobile robots and the middleware.
+     \item \textbf{RQ1.2 - What are the interface requirements of controlling applications?}  \hfill \\ 
+Mobile robots can be controlled by controlling applications. The middleware requires an interface towards those controlling applications to address them. It needs to be studies what the requirements for such an interface are and how the communication between middleware and controlling application takes place. It is of interest whether the middleware and the controlling application communicate through the push or pull principle.
+     \item \textbf{RQ1.3 - How can mobile robots be dynamically integrated into the middleware?} \hfill \\ 
+The mobile robots can be dynamically added into the controlling application, or into the middleware. It needs to be evaluated which approach is better suitable for this thesis and how they can be added. It is also of high interest whether the adapter for the mobile robots should be directly on the mobile robots themselves or whether they should be integrated into the middleware.
+     \item \textbf{RQ1.4 - How can the mobile robots sign in and sign out of the middleware?} \hfill \\ 
+When the mobile robots turn on or shut down, they need to sign in and sign out of the middleware and the controlling application.
+     \item \textbf{RQ1.5 - How can the features of mobile robots be maintained?} \hfill \\ 
+Mobile robots have different features such as whether they can pick up loads and their maximal speed. The features of mobile robots that are of interest for the process industry need to be identified. This leads to the question how the features can be maintained on the middleware.
+     \item \textbf{RQ1.6 - How does an internal language (bridge between the interface of controlling applications and the interfaces of mobile robots) work?} \hfill \\ 
+The middleware will use an internal language module to translate between the interfaces of the mobile robots and the interface of the controlling applications.
+     \item \textbf{RQ1.7 - How can multiple controlling applications be intergrated into the middleware?} \hfill \\ 
+Controlling applications can control one or multiple mobile robots. It is of interest to find out how to handle the case when multiple, different controlling applications control some or all of the mobile robots through the middleware.
 \end{itemize}
-   \item \textbf{RQ2 - How can the middleware be integrated into the BPM system PROCEED to allow communication between this application and multi-vendor mobile robots} \hfill \\ 
+   \item \textbf{RQ2 - How can the middleware address PROCEED (and vice versa) to allow communication between this application and multi-vendor mobile robots} \hfill \\ 
 The middleware should be able to run alone as well as be integrated into PROCEED. This research will answer further sub-questions:
    \begin{itemize}
-     \item \textbf{RQ 2.1 - How can mobile robots be integrated into PROCEED?} \hfill \\ 
-The mobile robots can be integrated into PROCEED, or into the middleware. It needs to be evaluated which approach is better suitable for this thesis. It is also of high interest whether the adapter for the mobile robots should be directly on the mobile robots themselves or whether they should be integrated into the middleware.
-     \item \textbf{RQ 2.2 - Where can suitable robots manually be selected in PROCEED?} \hfill \\ 
+     \item \textbf{RQ2.1 - Where can suitable robots manually be selected in PROCEED?} \hfill \\ 
 PROCEED has two major software components. It needs to be evaluated which of the two options is better to select a suitable mobile robot for the process.
-     \item \textbf{RQ 2.3 - When should the suitable mobile robot manually be selected in PROCEED?} \hfill \\ 
-Whether a mobile robot can complete a task depends on its functionalities such as whether it can carry a load. This can be decided during the configuration phase. During run-time, the middleware can check whether mobile robots that have been selected during the configuration phase are online. Further, during run-time mobile robots can be selected depending on their battery level and their distance from the current location of the mobile robot to the start point of the task for the mobile robot. PROCEED models processes with the graphical language Business Process Model and Notation (BPMN). Figure ~\ref{fig:introduction__bpmn} on ~\pageref{fig:introduction__bpmn} represents an example of a BPMN diagram, modeling the process for a mobile robot to fetch a package. It needs to be identified at which point of the diagram the manual selection will take place. One possible option is that the manual selection takes place at the beginning of the task "Robot fetches package" when the task is in the state ready. Adding the task "Preparing for package pick-up" in which  the manual selection takes place is another option.
+     \item \textbf{RQ2.2 - When should the suitable mobile robot manually be selected in PROCEED?} \hfill \\ 
+Whether a mobile robot can complete a task depends on its functionalities such as whether it can carry a load. This can be decided during the configuration phase. During run-time, the middleware can check whether mobile robots that have been selected during the configuration phase are online. Further, during run-time mobile robots can be selected depending on their battery level and their distance from the current location of the mobile robot to the start point of the task for the mobile robot. PROCEED models processes with the graphical language Business Process Model and Notation (BPMN). Figure ~\ref{fig:introduction__bpmn} on page ~\pageref{fig:introduction__bpmn} represents an example of a BPMN diagram, modeling the process for a mobile robot to fetch a package. It needs to be identified at which point of the diagram the manual selection will take place. One possible option is that the manual selection takes place at the beginning of the task "Robot fetches package" when the task is in the state ready. Adding the task "Preparing for package pick-up" in which  the manual selection takes place is another option.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/BPMN.png}\\
@@ -88,51 +91,53 @@ Whether a mobile robot can complete a task depends on its functionalities such a
           {Example of a BPMN diagram that models the process for a mobile robot to fetch a package}
 	\label{fig:introduction__bpmn}
 \end{figure}
-     \item \textbf{RQ 2.4 - What are the benefits of a central and decentral approach?} \hfill \\ 
+     \item \textbf{RQ 2.3 - What are the benefits of a central and decentral approach?} \hfill \\ 
 PROCEED has the option to run centrally, as well as decentrally. Centrally means that one system acts as a central coordinator for the entire process. Decentralized systems do not have such a central coordinator. In this case, mobile robots can communicate directly and therefore in a decentralized manner. This research will try to cover the advantages and challenges of direct and indirect communication between mobile robots from different vendors. It needs to be identified what the benefits of both approaches are and which approach will be used in this thesis.
    \end{itemize}
 \end{itemize}
 
 \section{Task Description}
+The thesis aims to develop a middleware to enable communication between different mobile robots and different controlling applications. In the context of this master thesis PROCEED will control mobile robots. However, other controlling applications can also control the mobile robots through the middleware. For the rest of the thesis the term controlling applications will be used for topics applying in general to controlling applications and the name PROCEED will be used for topics regarding the controlling application PROCEED.
+
 The tasks of this thesis can be categorized into three groups: what must, what should, and what may be completed. In the following list, the tasks of the thesis are described where the numbering corresponds to a prioritization of the tasks.
 
 What \underline{must} be done:
 \begin{enumerate}
-   \item \textbf{A superordinate entity must be able to control at least two mobile robots from different vendors through the middleware} \hfill \\
-	The thesis aims to develop a middleware through which a controlling application such as PROCEED and mobile robots from different vendors can communicate with each other. To control the mobile robots, PROCEED must be able to tell the mobile robots which actions to perform and the mobile robots must be able to communicate to PROCEED their status. Therefore, the middleware must enable bidirectional communication to two mobile robots from different vendors, adapted to their external interfaces. This task consists of multiple subtasks:
+   \item \textbf{A controlling application must be able to control at least two mobile robots from different vendors through the middleware} \hfill \\
+	The thesis aims to develop a middleware through which a controlling application and mobile robots from different vendors can communicate with each other. To control the mobile robots, the controlling application must be able to tell the mobile robots which actions to perform and the mobile robots must be able to communicate to the controlling application their status. Therefore, the middleware must enable bidirectional communication to two mobile robots from different vendors, adapted to their external interfaces. The middleware also requires an interface towards the controlling application. This task consists of multiple subtasks:
    \begin{enumerate}
-     \item\textbf{At least two specific mobile robots must be registered}
-To be able to control specific mobile robots, they must be registered on either PROCEED or the middleware.
-     \item\textbf{PROCEED must be able to trigger the action to drive from point-to-point to the mobile robots} \hfill \\
+     \item\textbf{At least two specific mobile robots must be registered} \hfill \\
+To be able to control specific mobile robots, they must be registered on either the controlling application or the middleware. The mobile robots must be able to sign in and sign out of the system.
+     \item\textbf{The controlling application must be able to communicate to the mobile robots to drive from point-to-point} \hfill \\
 Mobile robots can execute different actions. One of those actions is the ability to drive. It must be possible to communicate through the middleware to the mobile robots to execute a drive action.
-     \item\textbf{The mobile robots must be able to communicate to PROCEED their status information} \hfill \\
-To control the mobile robots, PROCEED requires status information of the mobile robots. This status information needs to be communicated through the middleware. It can be sent periodically from the mobile robots, or it can be sent after PROCEED requests it.
-     \item\textbf{PROCEED must be able to request the proprieties of the mobile robots} \hfill \\
-PROCEED requires information about the proprieties of the mobile robots such as dimensions, maximum speed, and payload to assign suitable tasks to the mobile robots.
+     \item\textbf{The mobile robots must be able to communicate to the controlling application their status information} \hfill \\
+To control the mobile robots,  the controlling application requires status information of the mobile robots. This status information needs to be communicated through the middleware. It can be sent periodically from the mobile robots, or it can be sent after  the controlling application requests it.
+     \item\textbf{The controlling application must be able to request the proprieties of the mobile robots} \hfill \\
+The controlling application requires information about the proprieties of the mobile robots such as dimensions, maximum speed, and payload to assign suitable tasks to the mobile robots. Those proprieties must be maintained.
    \end{enumerate}
      \item\textbf{Suitable robots must be selected via user input in PROCEED} \hfill \\
 Selecting which mobile robot to use must be selected according to the mobile robot’s functionalities e.g. whether it can pick up a load, and what its dimensions are. Other criteria for choosing a suitable mobile robot can be the distance to the task or the battery level. This selection option must be displayed in PROCEED and be manually chosen by the user. For that, it needs to be decided where the user input in PROCEED will take place.
-   \item \textbf{The middleware must communicate to PROCEED using existing communication protocols and standards} \hfill \\ 
-	The middleware has two interfaces: one interface towards the controlling application PROCEED, and adapters towards the mobile robots. The interface towards PROCEED must follow an existing communication protocol or standard. This enables the potential of the middleware by making it easier to add further controlling applications to the middleware. If no suitable standard exists, the minimum requirements for such a standard must be identified.
+   \item \textbf{The middleware must communicate to controlling applications using existing communication protocols and standards} \hfill \\ 
+	The middleware has two interfaces: one interface towards the controlling application PROCEED, and adapters towards the mobile robots. The interface towards controlling applications must follow an existing communication protocol or standard. This enables the potential of the middleware by making it easier to add further controlling applications to the middleware. If no suitable standard exists, the minimum requirements for such a standard must be identified.
    \item \textbf{The middleware must be scalable for further mobile robots} \hfill \\ 
-	The middleware must be able to easily extend further mobile robots from different vendors with different interfaces. Each different, proprietary interface can be addressed through an adapter. The middleware must have the option to easily embed more adapters into it.
+	The middleware must be able to easily extend further mobile robots. Each different, proprietary interface of the mobile robots can be addressed through an adapter. The middleware must have the option to easily embed more adapters into it.
 \end{enumerate}
 
 What \underline{should} be done:
 \begin{enumerate}
    \item \textbf{PROCEED should handle exceptional cases when no suitable mobile robots are available} \hfill \\ 
 	If no mobile robot which meets the functional and technical requirements exists, an error message should be sent out. Examples of no suitable mobile robot being available could be both mobile robots being out of battery or both mobile robots not having the function the task requires them to have e.g. picking up a too heavy load.
-   \item \textbf{PROCEED should be able to communicate to the mobile robot further actions} \hfill \\ 
-	After having added the possibility that the mobile robots perform a drive action, further actions that are defined in the chose communication standard such as charge, pick up and drop should be added to PROCEED and the middleware. It is desired that further actions can be added, when the standard is developped further.
+   \item \textbf{Controlling applications should be able to communicate through the middleware to the mobile robot further actions} \hfill \\ 
+	After having added the possibility that the mobile robots perform a drive action, further actions such as charge, pick up and drop should be added to the controlling applications and the middleware. It is desired that further actions can be added, when the standard is developped further.
 \end{enumerate}
 
 What \underline{may} be done:
 \begin{enumerate}  
    \item \textbf{PROCEED may be able to select a suitable robot depending on its functional requirements or data automatically} \hfill \\ 
 	A suitable robot may be selected automatically depending on the functionalities needed to complete the task. If several robots are suitable an algorithm that selects one needs to be implemented. That algorithm may include the robot which is the closest or which has the highest battery level. Further, a random selection may also be suggested.
-   \item \textbf{The middleware may be able to integrate other applications besides PROCEED} \hfill \\ 
-	The middleware may be able to easily extended with further applications that control the mobile robots. Applications that are addressable of the same interface and protocol as PROCEED are desired to be integrated into the middleware. Those applications allow testing whether the mobile robots can be controlled with any application that uses the chosen standard.
-   \item \textbf{PROCEED may be able to communicate to one mobile robot to fetch a load from a second mobile robot or to drop the load on it} \hfill \\ 
+   \item \textbf{Other controlling applications may be able to address the middleware and vice versa} \hfill \\ 
+	Applications that are addressable of the same interface and protocol as PROCEED are desired to be able to address the middleware. Those applications allow testing whether the mobile robots can be controlled with any application that uses the chosen standard. Multiple controlling applications may be able to control the same mobile robots during the process. It needs to be identified how the mobile robots handles the case when multiple, different controlling applications address the same mobile robots.
+   \item \textbf{The controlling applications may be able to instruct a mobile robot to fetch or a drop a load on another mobile robot} \hfill \\ 
 	In an industrial process, it is desired that mobile robots can directly interact with each other by one picking up a load from another mobile robot or by dropping the load on top of the other mobile robot. The mobile robot may be able to communicate through the middleware to the other mobile robot when they are ready to interact with another mobile robot and when they have completed the interaction.
 \end{enumerate}
 
