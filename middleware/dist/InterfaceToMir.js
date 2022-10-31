@@ -1,8 +1,11 @@
 "use strict";
 /*! Author: Mai Khanh Isabelle Wilhelm */
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.InterfaceToMir = void 0;
-class InterfaceToMir {
-}
+var InterfaceToMir = (function () {
+    function InterfaceToMir() {
+    }
+    return InterfaceToMir;
+}());
 exports.InterfaceToMir = InterfaceToMir;
 //# sourceMappingURL=InterfaceToMir.js.map

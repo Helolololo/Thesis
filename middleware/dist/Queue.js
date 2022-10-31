@@ -1,38 +1,52 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PriorityQueue = exports.data = void 0;
-exports.data = [];
-class PriorityQueue {
-    printQueue() {
-        exports.data.forEach(function (item) {
+/*! Author: Mai Khanh Isabelle Wilhelm */
+exports.__esModule = true;
+exports.PriorityQueue = void 0;
+var PriorityQueue = (function () {
+    function PriorityQueue() {
+        this.data = [];
+    }
+    PriorityQueue.prototype.sort = function () {
+        this.data.sort(function (a, b) {
+            var aPrio = a[1];
+            var bPrio = b[1];
+            if (aPrio === bPrio) {
+                return 0;
+            }
+            else if (aPrio > bPrio) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        });
+    };
+    PriorityQueue.prototype.printQueue = function () {
+        this.data.forEach(function (item) {
             console.log(item);
         });
-    }
-    enqueue(element) {
-        if (exports.data.length === 0) {
-            exports.data.push(element);
+    };
+    PriorityQueue.prototype.listQueue = function () {
+        return this.data;
+    };
+    PriorityQueue.prototype.enqueue = function (element) {
+        this.data.push(element);
+        if (this.data.length !== 0) {
+            this.sort();
         }
-        else {
-            var added = false;
-            for (var i = 0; i < exports.data.length; i++) {
-                if (element[1] < exports.data[i][1]) {
-                    exports.data.splice(i, 0, element);
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                exports.data.push(element);
-            }
-        }
-    }
-    dequeue() {
-        var value = exports.data.shift();
-        return value;
-    }
-    front() {
-        return exports.data[0];
-    }
-}
+        return this.data;
+    };
+    PriorityQueue.prototype.dequeue = function () {
+        return this.data.shift();
+    };
+    PriorityQueue.prototype.frontqueue = function () {
+        return this.data[0];
+    };
+    PriorityQueue.prototype.clearqueue = function () {
+        this.data = [];
+        return this.data;
+    };
+    return PriorityQueue;
+}());
 exports.PriorityQueue = PriorityQueue;
 //# sourceMappingURL=Queue.js.map

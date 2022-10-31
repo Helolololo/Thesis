@@ -1,9 +1,8 @@
 /* Created 07.10.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
-import { start } from "repl";
 import { Order, Topic } from "vda-5050-lib";
-import { PriorityQueue, data } from "./Queue";
+import { PriorityQueue } from "./Queue";
 
 let prioQueue = new PriorityQueue;
 

@@ -1,40 +1,61 @@
 /* Created 30.10.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
-export let data = [];
 export class PriorityQueue {
+    private data = [];
+
+
+    private sort() {
+        this.data.sort((a, b) => {
+            const aPrio = a[1];
+            const bPrio = b[1];
+
+            if (aPrio === bPrio) {
+                return 0;
+            }
+            else if (aPrio > bPrio) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        })
+    }
+
     public printQueue() {
         //(console.log(data));
-        data.forEach(function (item) {
+        this.data.forEach(function (item) {
             console.log(item);
         });
     }
 
+    public listQueue() {
+        return this.data;
+    }
+
     public enqueue(element) {
-        if (data.length === 0) {
-            data.push(element);
-        } else {
-            var added = false;
-            for (var i = 0; i < data.length; i++) {
-                if (element[1] < data[i][1]) { //checking priorities
-                    data.splice(i, 0, element);
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                data.push(element);
-            }
+        this.data.push(element);
+        if (this.data.length !== 0) {
+
+            this.sort();
         }
+
+        return this.data;
     }
 
     public dequeue() {
-        var value = data.shift();
-        return value;
+        return this.data.shift();
     }
 
-    public front() {
-        return data[0];
+    public frontqueue() {
+        return this.data[0];
     }
+
+    public clearqueue() {
+        this.data = [];
+        return this.data;
+    }
+
+    // unshift function to add element to the beginning of the queue
 }
 
