@@ -2,12 +2,17 @@
 /*! Author: Mai Khanh Isabelle Wilhelm */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Robot = exports.Speed = exports.Pos = exports.InternalLanguageModel = void 0;
+const Queue_1 = require("./Queue");
+let prioQueue = new Queue_1.PriorityQueue;
 class InternalLanguageModel {
     move(robot, endPosition, startPosition, speed) {
         console.log("Move Command");
         console.log("Robot: %o", robot);
         console.log("Start: %o", startPosition);
         console.log("End: %o", endPosition);
+        prioQueue.enqueue(['move', 2, [robot, endPosition, startPosition, speed]]);
+        console.log("print", Queue_1.data[0][2]);
+        prioQueue.printQueue();
     }
     pick(robot) {
     }
