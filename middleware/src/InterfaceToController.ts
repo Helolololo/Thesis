@@ -34,7 +34,7 @@ const middlewareClient: AgvId = { manufacturer: "RobotCompany", serialNumber: "0
 const agvClient = new AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
 
 // global variable to be acced by InternalLanguage model
-const messageToLanguageModel = new InternalLanguageModel(); ///////
+const messageToLanguageModel = new InternalLanguageModel();
 
 async function main() {
     // Start client interaction, connect to MQTT broker.
@@ -46,23 +46,26 @@ async function main() {
         console.log("Order object received: %o", originalOrder);
 
         let order: Headerless<Order> = originalOrder;       // copy the original order in another array
-        let startPosition = new Pos;
-        let endPosition = new Pos;
-        let robot = new Robot;
-        robot.manufacturer = middlewareClient.manufacturer;
-        robot.robotId = middlewareClient.serialNumber;
+
+        let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
         // find out whether it is move action
         let moveExpression: boolean = true;
 
         while (order.nodes.length > 1) {
+            let startPosition = new Pos;
+            let endPosition = new Pos;
+
             // if theta in position is defined, robot shall move when theta changes
             if (order.nodes[0].nodePosition !== undefined && order.nodes[1].nodePosition !== undefined) {
+                // add start x/y coordinates and destination x/y coordinates into attributes of the position class for the internal language model
+                // TODO change node[0] and [1] to firstNode and nextNode
                 startPosition.x = order.nodes[0].nodePosition.x;
                 startPosition.y = order.nodes[0].nodePosition.y;
                 endPosition.x = order.nodes[1].nodePosition.x;
                 endPosition.y = order.nodes[1].nodePosition.y;
 
                 if (order.nodes[0].nodePosition.theta !== undefined && order.nodes[1].nodePosition.theta !== undefined) {
+                    // add start theta and destination theta into attributes of the position class for the internal language model
                     startPosition.theta = order.nodes[0].nodePosition.theta;
                     endPosition.theta = order.nodes[1].nodePosition.theta;
 
@@ -120,10 +123,8 @@ async function main() {
                     // remove the first element of nodes and edges of the order
                     order.nodes[0].actions = order.nodes[0].actions.splice(1);
                 }
-            }
+            } // TODO is that in the correct order of the queue? and is the order spliced out correctly before and after? what if move and drop action together
         }
-
-
 
 
 

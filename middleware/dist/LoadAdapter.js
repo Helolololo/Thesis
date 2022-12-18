@@ -1,6 +1,27 @@
 "use strict";
-/* Created 12.10.2022 */
-/*! Author: Mai Khanh Isabelle Wilhelm */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,59 +59,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var mir_rest_calls_1 = require("./mir-rest-calls");
-/* Istantiation of the Mir 100 Client */
-var agvMir = new mir_rest_calls_1.Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
-function main() {
+exports.importModules = void 0;
+var fs = __importStar(require("fs"));
+var path = __importStar(require("path"));
+function importModules(directoryPath) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, _b, _c, mission_id, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-        return __generator(this, function (_o) {
-            switch (_o.label) {
+        var relativePath, files, adapters, _i, files_1, file, module_1, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    ;
-                    // get missions
-                    _b = (_a = console).log;
-                    _c = ["[getMissions] OK!"];
-                    return [4 /*yield*/, agvMir.getMissions()];
+                    _a.trys.push([0, 6, , 7]);
+                    relativePath = "".concat(__dirname, "\\").concat(directoryPath);
+                    return [4, fs.promises.readdir(relativePath)];
                 case 1:
-                    // get missions
-                    _b.apply(_a, _c.concat([_o.sent()]));
-                    mission_id = "f1abce6e-7930-11ec-aa93-94c691a3e2dc";
-                    _e = (_d = console).log;
-                    _f = ["[getMission ".concat(mission_id, "] OK!")];
-                    return [4 /*yield*/, agvMir.getMissions(mission_id)];
+                    files = _a.sent();
+                    adapters = [];
+                    _i = 0, files_1 = files;
+                    _a.label = 2;
                 case 2:
-                    _e.apply(_d, _f.concat([_o.sent()]));
-                    mission_id = "mirconst-guid-0000-0001-actionlist00";
-                    _h = (_g = console).log;
-                    _j = ["[getMission ".concat(mission_id, "] OK!")];
-                    return [4 /*yield*/, agvMir.getMissions(mission_id)];
+                    if (!(_i < files_1.length)) return [3, 5];
+                    file = files_1[_i];
+                    if (!((path.extname(file) === '.ts' || path.extname(file) === '.js') && !file.startsWith("_"))) return [3, 4];
+                    return [4, Promise.resolve().then(function () { return __importStar(require("".concat(relativePath, "/").concat(file.slice(0, -3)))); })];
                 case 3:
-                    _h.apply(_g, _j.concat([_o.sent()]));
-                    mission_id = "6e8dbeaa-79f2-11ec-95f0-94c691a3e2dc";
-                    _l = (_k = console).log;
-                    _m = ["[getMission ".concat(mission_id, "] OK!")];
-                    return [4 /*yield*/, agvMir.getMissions(mission_id)];
+                    module_1 = _a.sent();
+                    console.log(module_1);
+                    adapters.push(new module_1["default"]());
+                    _a.label = 4;
                 case 4:
-                    _l.apply(_k, _m.concat([_o.sent()]));
-                    return [2 /*return*/];
+                    _i++;
+                    return [3, 2];
+                case 5: return [2, adapters];
+                case 6:
+                    err_1 = _a.sent();
+                    console.error(err_1);
+                    return [3, 7];
+                case 7: return [2];
             }
         });
     });
 }
-main();
-/*
-# Get Request
-def get_missions(host, headers):
-    get_missions = requests.get(host + 'missions', headers = headers)
-
-# Post Reuest
-def post_missions(host, headers):
-    mission_id = {"mission_id": "56f192d2-a45b-11ec-8ad2-94c691a3e2dc"}   # mission_id is GUID
-    post_mission = requests.post(host + 'mission_queue', json = mission_id, headers = headers)
-    print(post_mission)
-  
-# Delete Request
-def delete_queue(host, headers):
-    delete = requests.delete(host + 'mission_queue', headers = headers)
-    */ 
+exports.importModules = importModules;
+importModules('adapter');
+//# sourceMappingURL=LoadAdapter.js.map

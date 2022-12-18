@@ -1,4 +1,5 @@
 "use strict";
+/* Created 12.10.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -15,7 +16,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -38,6 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var mir_rest_calls_1 = require("./mir-rest-calls");
+/* Istantiation of the Mir 100 Client */
 var agvMir = new mir_rest_calls_1.Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 function main() {
     return __awaiter(this, void 0, void 0, function () {
@@ -46,22 +48,23 @@ function main() {
             switch (_a.label) {
                 case 0:
                     ;
-                    return [4, agvMir.postPositions({
+                    return [4 /*yield*/, agvMir.postPositions({
+                            "map_id": "f4edbba0-7846-11ec-a1cf-94c691a3e2dc",
                             "name": "test position",
-                            "pos_x": 4.25,
-                            "pos_y": 8.4,
-                            "orientation": -73,
-                            "type_id": 0,
-                            "map_id": "f4edbba0-7846-11ec-a1cf-94c691a3e2dc"
+                            "orientation": -93.04766082763672,
+                            "pos_x": 7.45,
+                            "pos_y": 7.9,
+                            "type_id": 0
                         })];
                 case 1:
                     postMessage = _a.sent();
+                    // get position id
                     console.log("[newPosition] OK!");
                     console.log(postMessage);
                     console.log(postMessage["guid"]);
-                    return [4, agvMir.postMissions({
-                            "name": "Move test",
-                            "group_id": "mirconst-guid-0000-0001-missiongroup"
+                    return [4 /*yield*/, agvMir.postMissions({
+                            "group_id": "mirconst-guid-0000-0001-missiongroup",
+                            "name": "Move test"
                         })];
                 case 2:
                     missionMessage = _a.sent();
@@ -70,61 +73,50 @@ function main() {
                     console.log(missionMessage["guid"]);
                     missionid = missionMessage["guid"];
                     positionid = postMessage["guid"];
-                    return [4, agvMir.postMissionsActions(missionid, {
-                            "action_type": "move",
-                            "mission_id": missionid,
-                            "priority": 1,
-                            "parameters": [
+                    return [4 /*yield*/, agvMir.postMissionsActions(missionid, {
+                            action_type: "move",
+                            mission_id: missionid,
+                            parameters: [
                                 {
-                                    "id": "position",
-                                    "value": "8425ad44-79f3-11ec-95f0-94c691a3e2dc",
-                                    "guid": positionid,
-                                    "args": {
-                                        "orientation": -93.04766082763672,
-                                        "pos_x": 8.45,
-                                        "pos_y": 7.9,
-                                        "type_id": 0
-                                    }
+                                    id: "position",
+                                    guid: positionid
                                 },
                                 {
-                                    "id": "retries",
-                                    "value": 10
+                                    id: "retries",
+                                    value: 10
                                 },
                                 {
-                                    "id": "max_linear_speed",
-                                    "value": 0.15
-                                },
-                                {
-                                    "value": "main",
-                                    "id": "cart_entry_position"
-                                },
-                                {
-                                    "value": "main",
-                                    "id": "main_or_entry_position"
-                                },
-                                {
-                                    "value": "entry",
-                                    "id": "marker_entry_position"
-                                },
-                                {
-                                    "value": 0.1,
-                                    "id": "distance_threshold"
+                                    id: "max_linear_speed",
+                                    value: 0.15
                                 }
-                            ]
+                            ],
+                            priority: 1
                         })];
                 case 3:
                     actionMessage = _a.sent();
-                    return [4, agvMir.postMission_queue({
-                            "mission_id": missionid,
-                            "priority": 0
-                        })];
+                    return [4 /*yield*/, agvMir.postMission_queue({ mission_id: missionid })];
                 case 4:
                     queueMessage = _a.sent();
                     console.log(queueMessage);
-                    return [2];
+                    return [2 /*return*/];
             }
         });
     });
 }
 main();
-//# sourceMappingURL=mir-test.js.map
+/*
+
+     * POST /positions
+     * Add new position
+     * Required properties of the body: map_id, name, orientation, pos_x, pos_y, type_id
+     
+ public async postPositions(body: Object) {
+    this.assert(!(this.hasProperty("map_id", body)), "Parameter map_id is required for REST API CALL postPositions");
+    this.assert(!(this.hasProperty("name", body)), "Parameter name is required for REST API CALL postPositions");
+    this.assert(!(this.hasProperty("orientation", body)), "Parameter orientation is required for REST API CALL postPositions");
+    this.assert(!(this.hasProperty("pos_x", body)), "Parameter pos_x is required for REST API CALL postPositions");
+    this.assert(!(this.hasProperty("pos_y", body)), "Parameter pos_y is required for REST API CALL postPositions");
+    this.assert(!(this.hasProperty("type_id", body)), "Parameter type_id is required for REST API CALL postPositions");
+    return await this.sendRequest("POST", "positions/", body);
+}
+*/ 

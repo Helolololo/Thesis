@@ -46,12 +46,12 @@ async function main() {
     */
     var postMessage =
         await agvMir.postPositions({
+            "map_id": "f4edbba0-7846-11ec-a1cf-94c691a3e2dc",
             "name": "test position",
-            "pos_x": 4.25,
-            "pos_y": 8.4,
-            "orientation": -73,
+            "orientation": -93.04766082763672,
+            "pos_x": 7.45,        //7,4
+            "pos_y": 7.9,         //6,2
             "type_id": 0,
-            "map_id": "f4edbba0-7846-11ec-a1cf-94c691a3e2dc"
         });  // TODO check if reply is ok or wrong
 
     // get position id
@@ -62,8 +62,8 @@ async function main() {
     // create a new mission
     var missionMessage =
         await agvMir.postMissions({
-            "name": "Move test",
-            "group_id": "mirconst-guid-0000-0001-missiongroup"
+            "group_id": "mirconst-guid-0000-0001-missiongroup",       // was ist das?
+            "name": "Move test"
         });
     console.log("[newMission] OK!")
     console.log(missionMessage);
@@ -76,56 +76,27 @@ async function main() {
     var positionid = postMessage["guid"];
     var actionMessage =
         await agvMir.postMissionsActions(missionid, {
-            "action_type": "move",
-            "mission_id": missionid,
-            "priority": 1,
-            "parameters": [
+            action_type: "move",
+            mission_id: missionid,
+            parameters: [
                 {
-                    "id": "position",
-                    //"value": "b305f86b-85bb-11ec-8ee7-94c691a3e2dc",
-                    "value": "8425ad44-79f3-11ec-95f0-94c691a3e2dc",
-                    "guid": positionid,
-                    "args":
-                    {
-                        "orientation": -93.04766082763672,
-                        "pos_x": 8.45,
-                        "pos_y": 7.9,
-                        "type_id": 0
-                    }
+                    id: "position",
+                    guid: positionid
                 },
                 {
-                    "id": "retries",
-                    "value": 10
+                    id: "retries",
+                    value: 10
                 },
                 {
-                    "id": "max_linear_speed",
-                    "value": 0.15
-                },
-
-                {
-                    "value": "main",
-                    "id": "cart_entry_position"
-                },
-                {
-                    "value": "main",
-                    "id": "main_or_entry_position"
-                },
-                {
-                    "value": "entry",
-                    "id": "marker_entry_position"
-                },
-                {
-                    "value": 0.1,
-                    "id": "distance_threshold"
+                    id: "max_linear_speed",
+                    value: 0.15
                 }
-            ]
+            ],
+            priority: 1,
         });
 
     // add mission to queue
-    var queueMessage = await agvMir.postMission_queue({
-        "mission_id": missionid,
-        "priority": 0
-    });
+    var queueMessage = await agvMir.postMission_queue({ mission_id: missionid });
     console.log(queueMessage);
 
     /*

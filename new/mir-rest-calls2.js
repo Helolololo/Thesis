@@ -16,7 +16,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -49,6 +49,11 @@ var API_KEY = "Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTl
 * https://www.jugard-kuenstner.de/fileadmin/daten/Downloads/Intralogistik/MiR_Transportsystem/MiR100_MiR200/MiR_Rest-API.pdf
 *
 * The following API calls from the document have been implemented:
+* - GET /positions/{guid}
+* - PUT /positions/{guid}
+* - DELETE /positions/{guid}
+* - GET /positions
+* - POST /positions
 * - POST /mission_queue
 * - DELTE /mission_queue
 * - POST /missions
@@ -56,6 +61,12 @@ var API_KEY = "Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTl
 * - GET /missions/{guid}
 * - PUT /missions/{guid}
 * - DELETE /missions/{guid}
+GET /missions/{mission_id}/actions
+POST /missions/{mission_id}/actions
+GET /actions
+GET /missions/{mission_id}/actions/{guid}
+PUT /missions/{mission_id}/actions/{guid}
+DELETE /missions/{mission_id}/actions/{guid}
 */
 var Mir100Client = /** @class */ (function () {
     function Mir100Client(authorization) {
@@ -77,6 +88,7 @@ var Mir100Client = /** @class */ (function () {
     };
     /**
      * Sends out a REST request call for the MIR 100
+     * All calls have the required properties: authorization, accept-language, content-type
      */
     Mir100Client.prototype.sendRequest = function (method, path, body) {
         return __awaiter(this, void 0, void 0, function () {
@@ -108,9 +120,82 @@ var Mir100Client = /** @class */ (function () {
      * REST api calls of the MIR 100
      */
     /**
+ * GET /positions
+ * Retrieve list of positions
+ *
+ * GET /positions/{guid}
+ * Retrieve details about positions with specified GUID
+ * Required properties: position_id
+ */
+    Mir100Client.prototype.getPositions = function (guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(guid === undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.sendRequest("GET", "positions/")];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [4 /*yield*/, this.sendRequest("GET", "positions/".concat(guid))];
+                    case 3: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * PUT /positions/{guid}
+     * Modify values of positions with specified GUID
+     * Required properties: position_id
+     */
+    Mir100Client.prototype.putPositions = function (guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendRequest("PUT", "positions/".concat(guid), body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * DELETE /positions/{guid}
+     * Erase position with specified GUID
+     * Required properties: position_id
+     */
+    Mir100Client.prototype.deletePositions = function (guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendRequest("DELETE", "positions/".concat(guid))];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * POST /positions
+     * Add new position
+     * Required properties of the body: map_id, name, orientation, pos_x, pos_y, type_id
+     */
+    Mir100Client.prototype.postPositions = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.assert(!(this.hasProperty("map_id", body)), "Parameter map_id is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("name", body)), "Parameter name is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("orientation", body)), "Parameter orientation is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("pos_x", body)), "Parameter pos_x is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("pos_y", body)), "Parameter pos_y is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("type_id", body)), "Parameter type_id is required for REST API CALL postPositions");
+                        return [4 /*yield*/, this.sendRequest("POST", "positions/", body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
      * POST /mission_queue
      * Add a new mission to the mission queue. The mission will always go to the end of the queue
-     *
      * Required properties of the body: mission_id
      */
     //    post_mission = requests.post(host + 'mission_queue', json = mission_id, headers = headers)
@@ -143,7 +228,6 @@ var Mir100Client = /** @class */ (function () {
     /**
      * POST /missions
      * Add a new mission
-     *
      * Required properties of the body: group_id, name
      */
     Mir100Client.prototype.postMissions = function (body) {
@@ -203,6 +287,78 @@ var Mir100Client = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.sendRequest("DELETE", "missions/".concat(guid))];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * GET /missions/{mission_id}/actions
+     * Retrieve list of actions that belong to specified mission
+     * Required properties: mission_id
+     *
+     * * GET /missions/{mission_id}/actions/{guid}
+     * Retrieve details about specified action of specified mission
+     * Required properties: mission_id, guid
+     */
+    Mir100Client.prototype.getMissionsActions = function (mission_id, guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(guid === undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.sendRequest("GET", "missions/".concat(mission_id, "/actions"))];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [4 /*yield*/, this.sendRequest("GET", "missions/".concat(mission_id, "/actions/").concat(guid))];
+                    case 3: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * POST /missions/{mission_id}/actions
+     * Add new action to specified mssion
+     * Required body properties: action_type, parameters, priority
+     */
+    Mir100Client.prototype.postMissionsActions = function (guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.assert(!(this.hasProperty("action_type", body)), "Parameter action_type is required for REST API CALL postMissionsActions");
+                        this.assert(!(this.hasProperty("parameters", body)), "Parameter parameters is required for REST API CALL postMissionsActions");
+                        this.assert(!(this.hasProperty("priority", body)), "Parameter priority is required for REST API CALL postMissionsActions");
+                        return [4 /*yield*/, this.sendRequest("POST", "missions/".concat(guid, "/actions"), body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * PUT /missions/{mission_id}/actions/{guid}
+     * Modify the values of the specified action that belongs to specified mission
+     * Required properties: mission_id, guid
+     */
+    Mir100Client.prototype.putMissionsActions = function (mission_id, guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendRequest("PUT", "missions/".concat(mission_id, "/actions/").concat(guid), body)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * DELETE /missions/{mission_id}/actions/{guid}
+     * Erase the action with the specified GUID from the mission with the specified mission ID
+     * Required properties: mission_id, guid
+     */
+    Mir100Client.prototype.deleteMissionsActions = function (mission_id, guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendRequest("DELETE", "missions/".concat(mission_id, "/actions/").concat(guid))];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

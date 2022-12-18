@@ -6,7 +6,11 @@ var Queue_1 = require("./Queue");
 var prioQueue = new Queue_1.PriorityQueue;
 var InternalLanguageModel = (function () {
     function InternalLanguageModel() {
+        prioQueue.startprocessingqueue();
     }
+    InternalLanguageModel.prototype.testMove = function () {
+        prioQueue.enqueue(['move', 2, []]);
+    };
     InternalLanguageModel.prototype.move = function (robot, endPosition, startPosition, speed) {
         console.log("Move Command");
         console.log("Robot: %o", robot);
@@ -16,16 +20,16 @@ var InternalLanguageModel = (function () {
         prioQueue.printQueue();
     };
     InternalLanguageModel.prototype.pick = function (robot) {
-        prioQueue.enqueue(['pick', 2, []]);
+        prioQueue.enqueue(['pick', 2, [], 'mir100']);
     };
     InternalLanguageModel.prototype.drop = function (robot) {
-        prioQueue.enqueue(['drop', 2, []]);
+        prioQueue.enqueue(['drop', 2, [], 'mir100']);
     };
     InternalLanguageModel.prototype.charge = function (robot) {
-        prioQueue.enqueue(['charge', 2, []]);
+        prioQueue.enqueue(['charge', 2, [], 'mir100']);
     };
     InternalLanguageModel.prototype.cancel = function (robot) {
-        prioQueue.enqueue(['cancel', 1, []]);
+        prioQueue.enqueue(['cancel', 1, [], 'mir100']);
     };
     return InternalLanguageModel;
 }());
@@ -45,7 +49,9 @@ var Speed = (function () {
 }());
 exports.Speed = Speed;
 var Robot = (function () {
-    function Robot() {
+    function Robot(manufacturer, robotId) {
+        this.manufacturer = manufacturer;
+        this.robotId = robotId;
     }
     return Robot;
 }());

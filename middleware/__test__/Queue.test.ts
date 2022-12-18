@@ -20,7 +20,7 @@ test('should add a new element to the queue', () => {
     expect(data).toEqual([['test', 2], ['move', 2, ['parameter 1', 'parameter 2', 'parameter 3']]]);
 });
 
-// Integration Test method enqueue() of Queue Class
+// Unit Test method enqueue() of Queue Class
 test('should add a new element to the queue with a higher priority', () => {
     data = q.enqueue(['move', 1, ['parameter 4', 'parameter 5', 'parameter 6']]);
     expect(data).toEqual([['move', 1, ['parameter 4', 'parameter 5', 'parameter 6']], ['test', 2], ['move', 2, ['parameter 1', 'parameter 2', 'parameter 3']]]);

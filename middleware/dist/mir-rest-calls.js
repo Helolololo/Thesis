@@ -75,6 +75,57 @@ var Mir100Client = (function () {
     Mir100Client.prototype.handleError = function (response) {
         console.log("Error! returned ".concat(response.status, ":"), response.data);
     };
+    Mir100Client.prototype.getPositions = function (guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(guid === undefined)) return [3, 2];
+                        return [4, this.sendRequest("GET", "positions/")];
+                    case 1: return [2, _a.sent()];
+                    case 2: return [4, this.sendRequest("GET", "positions/".concat(guid))];
+                    case 3: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.putPositions = function (guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.sendRequest("PUT", "positions/".concat(guid), body)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.deletePositions = function (guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.sendRequest("DELETE", "positions/".concat(guid))];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.postPositions = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.assert(!(this.hasProperty("map_id", body)), "Parameter map_id is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("name", body)), "Parameter name is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("orientation", body)), "Parameter orientation is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("pos_x", body)), "Parameter pos_x is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("pos_y", body)), "Parameter pos_y is required for REST API CALL postPositions");
+                        this.assert(!(this.hasProperty("type_id", body)), "Parameter type_id is required for REST API CALL postPositions");
+                        return [4, this.sendRequest("POST", "positions/", body)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     Mir100Client.prototype.postMission_queue = function (body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -139,6 +190,54 @@ var Mir100Client = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.sendRequest("DELETE", "missions/".concat(guid))];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.getMissionsActions = function (mission_id, guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(guid === undefined)) return [3, 2];
+                        return [4, this.sendRequest("GET", "missions/".concat(mission_id, "/actions"))];
+                    case 1: return [2, _a.sent()];
+                    case 2: return [4, this.sendRequest("GET", "missions/".concat(mission_id, "/actions/").concat(guid))];
+                    case 3: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.postMissionsActions = function (guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.assert(!(this.hasProperty("action_type", body)), "Parameter action_type is required for REST API CALL postMissionsActions");
+                        this.assert(!(this.hasProperty("parameters", body)), "Parameter parameters is required for REST API CALL postMissionsActions");
+                        this.assert(!(this.hasProperty("priority", body)), "Parameter priority is required for REST API CALL postMissionsActions");
+                        return [4, this.sendRequest("POST", "missions/".concat(guid, "/actions"), body)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.putMissionsActions = function (mission_id, guid, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.sendRequest("PUT", "missions/".concat(mission_id, "/actions/").concat(guid), body)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    Mir100Client.prototype.deleteMissionsActions = function (mission_id, guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.sendRequest("DELETE", "missions/".concat(mission_id, "/actions/").concat(guid))];
                     case 1: return [2, _a.sent()];
                 }
             });

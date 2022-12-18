@@ -73,13 +73,11 @@ function main() {
                     return [4, agvClient.subscribe(vda_5050_lib_1.Topic.Order, function (originalOrder) {
                             console.log("Order object received: %o", originalOrder);
                             var order = originalOrder;
-                            var startPosition = new InternalLangageModel_1.Pos;
-                            var endPosition = new InternalLangageModel_1.Pos;
-                            var robot = new InternalLangageModel_1.Robot;
-                            robot.manufacturer = middlewareClient.manufacturer;
-                            robot.robotId = middlewareClient.serialNumber;
+                            var robot = new InternalLangageModel_1.Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
                             var moveExpression = true;
                             while (order.nodes.length > 1) {
+                                var startPosition = new InternalLangageModel_1.Pos;
+                                var endPosition = new InternalLangageModel_1.Pos;
                                 if (order.nodes[0].nodePosition !== undefined && order.nodes[1].nodePosition !== undefined) {
                                     startPosition.x = order.nodes[0].nodePosition.x;
                                     startPosition.y = order.nodes[0].nodePosition.y;
