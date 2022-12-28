@@ -69,7 +69,6 @@ var MirAdapter = (function (_super) {
                 args: ["forward"],
                 handler: function (args) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log("...running move command...");
                         return [2, {
                                 success: false,
                                 message: "Could not move forward"

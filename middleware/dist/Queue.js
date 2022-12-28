@@ -105,7 +105,6 @@ var PriorityQueue = (function () {
                                 itemToQueue = this.dequeue();
                                 if (!itemToQueue)
                                     return [2];
-                                console.log("...running queue iteration...");
                                 command = itemToQueue[0];
                                 args = itemToQueue[2];
                                 robot = "mir100";

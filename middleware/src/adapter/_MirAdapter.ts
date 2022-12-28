@@ -28,7 +28,6 @@ export default class MirAdapter extends Adapter {
                     //         message: "Moved forward",
                     //     };
                     // else
-                    console.log("...running move command...")
                     return {
                         success: false,
                         message: "Could not move forward",

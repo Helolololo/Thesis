@@ -69,7 +69,6 @@ export class PriorityQueue {
             }
             const itemToQueue = this.dequeue();
             if (!itemToQueue) return;
-            console.log("...running queue iteration...")
             const command = itemToQueue[0];
             const args = itemToQueue[2];
             // TODO: this needs to be processed by the intereface to controller so that we know

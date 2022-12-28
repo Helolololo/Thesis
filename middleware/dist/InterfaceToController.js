@@ -63,6 +63,90 @@ var currentVelocity = {};
 var middlewareClient = { manufacturer: "RobotCompany", serialNumber: "001" };
 var agvClient = new vda_5050_lib_1.AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
 var messageToLanguageModel = new InternalLangageModel_1.InternalLanguageModel();
+function decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName) {
+    console.log("-- decode Order to move command --");
+    var moveCommand = false;
+    var startPosition = new InternalLangageModel_1.Pos;
+    var endPosition = new InternalLangageModel_1.Pos;
+    startPosition.name = startNodeName;
+    endPosition.name = nextNodeName;
+    console.log(startNode);
+    console.log(nextNode);
+    if (startPosition.name !== endPosition.name) {
+        moveCommand = true;
+    }
+    if (startNode !== undefined && nextNode !== undefined) {
+        startPosition.x = startNode.x;
+        startPosition.y = startNode.y;
+        endPosition.x = nextNode.x;
+        endPosition.y = nextNode.y;
+        if ((startNode.x !== nextNode.x) || (startNode.y !== nextNode.y)) {
+            moveCommand = true;
+        }
+        if (startNode.theta !== undefined && nextNode.theta !== undefined) {
+            startPosition.theta = startNode.theta;
+            endPosition.theta = nextNode.theta;
+            if (startNode.theta !== nextNode.theta) {
+                moveCommand = true;
+            }
+        }
+    }
+    console.log("move command:");
+    console.log(moveCommand);
+    if (moveCommand) {
+        messageToLanguageModel.move(robot, endPosition, startPosition);
+    }
+}
+function decodeOrderToOtherCommand(robot, otherCommands) {
+    console.log("-- decode Order to other command --");
+    if (otherCommands.length !== 0) {
+        console.log("Further actions to perform");
+        while (otherCommands.length >= 1) {
+            var command = otherCommands[0];
+            if (command.actionType === "drop") {
+                decodeOrderToDropCommand(robot);
+            }
+            else if (command.actionType === "pick") {
+                decodeOrderToPickCommand(robot);
+            }
+            else if (command.actionType === "startCharging" || command.actionType === "stopCharging") {
+                decodeOrderToChargeCommand(robot);
+            }
+            otherCommands = otherCommands.splice(1);
+        }
+    }
+}
+function decodeOrderToDropCommand(robot) {
+    messageToLanguageModel.drop(robot);
+}
+function decodeOrderToPickCommand(robot) {
+    messageToLanguageModel.pick(robot);
+}
+function decodeOrderToChargeCommand(robot) {
+    messageToLanguageModel.charge(robot);
+}
+function decodeOrder(robot, order) {
+    var startNode;
+    var nextNode;
+    var startNodeName;
+    var nextNodeName;
+    var otherCommands;
+    console.log("-- decode Order --");
+    otherCommands = order.nodes[0].actions;
+    decodeOrderToOtherCommand(robot, otherCommands);
+    while (order.nodes.length > 1) {
+        startNode = order.nodes[0].nodePosition;
+        nextNode = order.nodes[1].nodePosition;
+        startNodeName = order.nodes[0].nodeId;
+        nextNodeName = order.nodes[1].nodeId;
+        otherCommands = order.nodes[1].actions;
+        decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName);
+        decodeOrderToOtherCommand(robot, otherCommands);
+        order.nodes = order.nodes.splice(1);
+        order.edges = order.edges.splice(1);
+        console.log(order);
+    }
+}
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -72,57 +156,8 @@ function main() {
                     _a.sent();
                     return [4, agvClient.subscribe(vda_5050_lib_1.Topic.Order, function (originalOrder) {
                             console.log("Order object received: %o", originalOrder);
-                            var order = originalOrder;
                             var robot = new InternalLangageModel_1.Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
-                            var moveExpression = true;
-                            while (order.nodes.length > 1) {
-                                var startPosition = new InternalLangageModel_1.Pos;
-                                var endPosition = new InternalLangageModel_1.Pos;
-                                if (order.nodes[0].nodePosition !== undefined && order.nodes[1].nodePosition !== undefined) {
-                                    startPosition.x = order.nodes[0].nodePosition.x;
-                                    startPosition.y = order.nodes[0].nodePosition.y;
-                                    endPosition.x = order.nodes[1].nodePosition.x;
-                                    endPosition.y = order.nodes[1].nodePosition.y;
-                                    if (order.nodes[0].nodePosition.theta !== undefined && order.nodes[1].nodePosition.theta !== undefined) {
-                                        startPosition.theta = order.nodes[0].nodePosition.theta;
-                                        endPosition.theta = order.nodes[1].nodePosition.theta;
-                                        if (order.nodes[0].nodePosition.theta === order.nodes[1].nodePosition.theta) {
-                                            moveExpression = false;
-                                        }
-                                    }
-                                    if (!((order.nodes[0].nodePosition.x === order.nodes[1].nodePosition.x) ||
-                                        !(order.nodes[0].nodePosition.y === order.nodes[1].nodePosition.y))) {
-                                        moveExpression = true;
-                                    }
-                                    else {
-                                        moveExpression = false;
-                                    }
-                                }
-                                if (!(order.nodes[0].nodeId === order.nodes[1].nodeId) && moveExpression) {
-                                    startPosition.name = order.nodes[0].nodeId;
-                                    endPosition.name = order.nodes[1].nodeId;
-                                    messageToLanguageModel.move(robot, endPosition, startPosition);
-                                }
-                                order.nodes = order.nodes.splice(1);
-                                order.edges = order.edges.splice(1);
-                                console.log(order);
-                                if (!(order.nodes[0].actions.length === 0)) {
-                                    console.log("Further actions to perform");
-                                    while (order.nodes[0].actions.length >= 1) {
-                                        if (order.nodes[0].actions[0].actionType === "drop") {
-                                            messageToLanguageModel.drop(robot);
-                                        }
-                                        else if (order.nodes[0].actions[0].actionType === "pick") {
-                                            messageToLanguageModel.drop(robot);
-                                        }
-                                        else if (order.nodes[0].actions[0].actionType === "startCharging" ||
-                                            order.nodes[0].actions[0].actionType === "stopCharging") {
-                                            messageToLanguageModel.charge(robot);
-                                        }
-                                        order.nodes[0].actions = order.nodes[0].actions.splice(1);
-                                    }
-                                }
-                            }
+                            decodeOrder(robot, originalOrder);
                             agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
                         })];
                 case 2:

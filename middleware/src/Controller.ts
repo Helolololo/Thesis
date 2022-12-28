@@ -1,7 +1,7 @@
 /* Created 09.10.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
-import { MasterControlClient, AgvId, Headerless, Order, Topic } from "vda-5050-lib";
+import { MasterControlClient, AgvId, Headerless, Order, Topic, BlockingType } from "vda-5050-lib";
 
 // Create instance of Master Control Client with minimal options: communication namespace and broker endpoint address.
 const mcClient = new MasterControlClient({ interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
@@ -20,8 +20,20 @@ async function main() {
     const order: Headerless<Order> = {
         orderId: "order0001",
         orderUpdateId: 0,
-        nodes: [{ nodeId: "productionunit_1", sequenceId: 0, released: true, actions: [] }, { nodeId: "productionunit_2", sequenceId: 2, released: true, actions: [] }],
-        edges: [{ edgeId: "edge1_1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "productionunit_2", released: true, actions: [] }],
+        nodes: [
+            {
+                nodeId: "productionunit_1", sequenceId: 0, nodePosition: { mapId: "map_1", x: 5, y: 0, theta: 0 }, released: true, actions: [
+                    { actionId: "action_1", actionType: "startCharging", blockingType: BlockingType.Hard },
+                    { actionId: "action_2", actionType: "stopCharging", blockingType: BlockingType.Hard }]
+            },     // TODO: add actions with blockingtypes
+            { nodeId: "productionunit_1", sequenceId: 2, nodePosition: { mapId: "map_1", x: 5, y: 0, theta: 1.5 }, released: true, actions: [] },
+            {
+                nodeId: "productionunit_2", sequenceId: 4, released: true, actions: [
+                    { actionId: "action_3", actionType: "drop", blockingType: BlockingType.Hard }
+                ]
+            }],
+        edges: [{ edgeId: "edge1_1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "productionunit_1", released: true, actions: [] },
+        { edgeId: "edge1_2", sequenceId: 3, startNodeId: "productionunit_1", endNodeId: "productionunit_2", released: true, actions: [] }],     // TODO: add actions at edges
     };
     const orderWithHeader = await mcClient.publish(Topic.Order, middlewareClient, order);
     console.log("Published order %o", orderWithHeader);
