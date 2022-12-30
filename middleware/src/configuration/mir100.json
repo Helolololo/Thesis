@@ -1,0 +1,26 @@
+{
+    "adapterName": "mir100",
+    "robots": [
+        {
+            "name": "mir100_1",
+            "authorization": "Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==",
+            "commands": [
+                "move",
+                "charge"
+            ]
+        },
+        {
+            "name": "mir100_2",
+            "authorization": "",
+            "commands": [
+                "move",
+                "charge",
+                "drop",
+                "pick"
+            ],
+            "specification": {
+                "payload": 100
+            }
+        }
+    ]
+}
