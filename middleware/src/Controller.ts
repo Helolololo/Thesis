@@ -16,10 +16,26 @@ async function main() {
 
     // PUB ORDER
     // Publish an Order object targeted at a specific AGV.
-    const middlewareClient: AgvId = { manufacturer: "RobotCompany", serialNumber: "001" };
+    const middlewareClient: AgvId = { manufacturer: "mir", serialNumber: "001" };
     const order: Headerless<Order> = {
         orderId: "order0001",
         orderUpdateId: 0,
+        nodes: [
+            {
+                nodeId: "productionunit_1", sequenceId: 0, released: true, actions: []
+            },     // TODO: add actions with blockingtypes
+            {
+                nodeId: "Destination", sequenceId: 2, released: true, actions: []
+            },
+            /*{
+                nodeId: "Destination", sequenceId: 4, released: true, actions: []
+            }*/],
+        edges: [
+            { edgeId: "edge1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "Destination", released: true, actions: [] },
+            //{ edgeId: "edge2", sequenceId: 3, startNodeId: "Destination", endNodeId: "Start", released: true, actions: [] }
+        ]   // TODO: add actions at edges
+
+        /*
         nodes: [
             {
                 nodeId: "productionunit_1", sequenceId: 0, nodePosition: { mapId: "map_1", x: 5, y: 0, theta: 0 }, released: true, actions: [
@@ -33,7 +49,9 @@ async function main() {
                 ]
             }],
         edges: [{ edgeId: "edge1_1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "productionunit_1", released: true, actions: [] },
-        { edgeId: "edge1_2", sequenceId: 3, startNodeId: "productionunit_1", endNodeId: "productionunit_2", released: true, actions: [] }],     // TODO: add actions at edges
+        { edgeId: "edge1_2", sequenceId: 3, startNodeId: "productionunit_1", endNodeId: "productionunit_2", released: true, actions: [] }],
+        */
+
     };
     const orderWithHeader = await mcClient.publish(Topic.Order, middlewareClient, order);
     console.log("Published order %o", orderWithHeader);

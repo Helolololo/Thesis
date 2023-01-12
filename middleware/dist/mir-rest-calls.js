@@ -126,6 +126,20 @@ var Mir100Client = (function () {
             });
         });
     };
+    Mir100Client.prototype.getMission_queue = function (guid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(guid === undefined)) return [3, 2];
+                        return [4, this.sendRequest("GET", "mission_queue/")];
+                    case 1: return [2, _a.sent()];
+                    case 2: return [4, this.sendRequest("GET", "mission_queue/".concat(guid))];
+                    case 3: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     Mir100Client.prototype.postMission_queue = function (body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

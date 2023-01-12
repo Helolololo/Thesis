@@ -53,6 +53,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var adapterTemplate_1 = require("../adapterTemplate");
+var mir_rest_calls_1 = require("../mir-rest-calls");
+var agvMir = new mir_rest_calls_1.Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 var MirAdapter = (function (_super) {
     __extends(MirAdapter, _super);
     function MirAdapter() {
@@ -80,6 +82,75 @@ var MirAdapter = (function (_super) {
     };
     MirAdapter.prototype.recvFromRest = function () {
         this.handleCommand("move");
+    };
+    MirAdapter.prototype.initPositions = function () {
+    };
+    MirAdapter.prototype.sendMoveCommand = function (positionName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var missionMessage, missionid, actionMessage, queueMessage;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, agvMir.postMissions({
+                            "name": "Move to ".concat(positionName),
+                            "group_id": "mirconst-guid-0000-0001-missiongroup"
+                        })];
+                    case 1:
+                        missionMessage = _a.sent();
+                        missionid = missionMessage["guid"];
+                        return [4, agvMir.postMissionsActions(missionid, {
+                                "action_type": "move",
+                                "mission_id": missionid,
+                                "priority": 1,
+                                "parameters": [
+                                    {
+                                        "id": "position",
+                                        "value": "8425ad44-79f3-11ec-95f0-94c691a3e2dc",
+                                        "guid": "8425ad44-79f3-11ec-95f0-94c691a3e2dc",
+                                        "args": {
+                                            "orientation": -93.04766082763672,
+                                            "pos_x": 8.45,
+                                            "pos_y": 7.9,
+                                            "type_id": 0
+                                        }
+                                    },
+                                    {
+                                        "id": "retries",
+                                        "value": 10
+                                    },
+                                    {
+                                        "id": "max_linear_speed",
+                                        "value": 0.15
+                                    },
+                                    {
+                                        "value": "main",
+                                        "id": "cart_entry_position"
+                                    },
+                                    {
+                                        "value": "main",
+                                        "id": "main_or_entry_position"
+                                    },
+                                    {
+                                        "value": "entry",
+                                        "id": "marker_entry_position"
+                                    },
+                                    {
+                                        "value": 0.1,
+                                        "id": "distance_threshold"
+                                    }
+                                ]
+                            })];
+                    case 2:
+                        actionMessage = _a.sent();
+                        return [4, agvMir.postMission_queue({
+                                "mission_id": missionid,
+                                "priority": 0
+                            })];
+                    case 3:
+                        queueMessage = _a.sent();
+                        return [2];
+                }
+            });
+        });
     };
     MirAdapter.prototype.sendCommandToRest = function () {
         return __awaiter(this, void 0, void 0, function () {

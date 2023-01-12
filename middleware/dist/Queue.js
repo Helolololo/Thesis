@@ -42,6 +42,7 @@ var LoadAdapter_1 = require("./LoadAdapter");
 var PriorityQueue = (function () {
     function PriorityQueue() {
         this.data = [];
+        this.modules = [];
     }
     PriorityQueue.prototype.sort = function () {
         this.data.sort(function (a, b) {
@@ -59,9 +60,11 @@ var PriorityQueue = (function () {
         });
     };
     PriorityQueue.prototype.printQueue = function () {
+        console.log("| Printing Queue |");
         this.data.forEach(function (item) {
             console.log(item);
         });
+        console.log("| -------------- |");
     };
     PriorityQueue.prototype.listQueue = function () {
         return this.data;
@@ -87,17 +90,17 @@ var PriorityQueue = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                if (this.processor) {
+                if (this.wantToProcess) {
                     return [2];
                 }
-                this.processor = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                this.wantToProcess = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                     var _a, itemToQueue, command, args, robot, _i, _b, adapter, output;
                     return __generator(this, function (_c) {
                         switch (_c.label) {
                             case 0:
-                                if (!!this.modules) return [3, 2];
+                                if (!(this.modules.length === 0)) return [3, 2];
                                 _a = this;
-                                return [4, (0, LoadAdapter_1.importModules)("adapter")];
+                                return [4, (0, LoadAdapter_1.importModules)("adapter2")];
                             case 1:
                                 _a.modules = _c.sent();
                                 _c.label = 2;
@@ -114,15 +117,18 @@ var PriorityQueue = (function () {
                                 if (!(_i < _b.length)) return [3, 6];
                                 adapter = _b[_i];
                                 if (!adapter.getAcceptedRobots().includes(robot)) return [3, 5];
-                                console.log("running command", command, robot);
+                                console.log("Running command", command, robot);
                                 return [4, adapter.handleCommand(command, args)];
                             case 4:
                                 output = _c.sent();
-                                _c.label = 5;
+                                console.log(output);
+                                return [2];
                             case 5:
                                 _i++;
                                 return [3, 3];
-                            case 6: return [2];
+                            case 6:
+                                console.log("Failed to find robot to run command", command, args, robot);
+                                return [2];
                         }
                     });
                 }); }, 50);
@@ -131,7 +137,7 @@ var PriorityQueue = (function () {
         });
     };
     PriorityQueue.prototype.stopprocessingqueue = function () {
-        clearInterval(this.processor);
+        clearInterval(this.wantToProcess);
     };
     return PriorityQueue;
 }());

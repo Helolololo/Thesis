@@ -14,7 +14,7 @@ const currentState: State = {
     headerId: 0,
     lastNodeId: "",
     lastNodeSequenceId: 0,
-    manufacturer: "RobotCompany",
+    manufacturer: "mir",
     nodeStates: [],
     operatingMode: OperatingMode.Manual,
     orderId: "",
@@ -28,7 +28,7 @@ const currentPosition = {} as AgvPosition;
 const currentVelocity = {} as Velocity;
 
 // The target AGV.
-const middlewareClient: AgvId = { manufacturer: "RobotCompany", serialNumber: "001" };
+const middlewareClient: AgvId = { manufacturer: "mir", serialNumber: "001" };
 
 // Create instance of AGV Client "001" with minimal options: communication namespace and broker endpoint address.
 const agvClient = new AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
@@ -41,7 +41,7 @@ const messageToLanguageModel = new InternalLanguageModel();
  */
 
 function decodeOrderToMoveCommand(robot: Robot, startNode: NodePosition, nextNode: NodePosition, startNodeName: string, nextNodeName: string) {
-    console.log("-- decode Order to move command --");
+    //console.log("-- decode Order to move command --");
 
     let moveCommand: boolean = false;
     let startPosition = new Pos;            // start position of the order sent to the internal language model  
@@ -50,8 +50,8 @@ function decodeOrderToMoveCommand(robot: Robot, startNode: NodePosition, nextNod
     startPosition.name = startNodeName;
     endPosition.name = nextNodeName;
 
-    console.log(startNode);
-    console.log(nextNode);
+    //console.log(startNode);
+    //console.log(nextNode);
 
     if (startPosition.name !== endPosition.name) {
         moveCommand = true;
@@ -97,11 +97,11 @@ function decodeOrderToMoveCommand(robot: Robot, startNode: NodePosition, nextNod
 
 function decodeOrderToOtherCommand(robot: Robot, otherCommands: Action[]) {
 
-    console.log("-- decode Order to other command --");
+    //console.log("-- decode Order to other command --");
 
     // find out what action to perform (is in nodes which is an array of objects)
     if (otherCommands.length !== 0) {
-        console.log("Further actions to perform");
+        //console.log("Further actions to perform");
 
         while (otherCommands.length >= 1) {
             let command: Action = otherCommands[0];

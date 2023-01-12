@@ -47,26 +47,25 @@ function main() {
                 case 0: return [4, mcClient.start()];
                 case 1:
                     _a.sent();
-                    middlewareClient = { manufacturer: "RobotCompany", serialNumber: "001" };
+                    middlewareClient = { manufacturer: "mir", serialNumber: "001" };
                     order = {
                         orderId: "order0001",
                         orderUpdateId: 0,
                         nodes: [
                             {
-                                nodeId: "productionunit_1", sequenceId: 0, nodePosition: { mapId: "map_1", x: 5, y: 0, theta: 0 }, released: true, actions: [
-                                    { actionId: "action_1", actionType: "startCharging", blockingType: vda_5050_lib_1.BlockingType.Hard },
-                                    { actionId: "action_2", actionType: "stopCharging", blockingType: vda_5050_lib_1.BlockingType.Hard }
-                                ]
+                                nodeId: "productionunit_1", sequenceId: 0, released: true, actions: []
                             },
-                            { nodeId: "productionunit_1", sequenceId: 2, nodePosition: { mapId: "map_1", x: 5, y: 0, theta: 1.5 }, released: true, actions: [] },
                             {
-                                nodeId: "productionunit_2", sequenceId: 4, released: true, actions: [
-                                    { actionId: "action_3", actionType: "drop", blockingType: vda_5050_lib_1.BlockingType.Hard }
-                                ]
+                                nodeId: "Destination", sequenceId: 2, released: true, actions: []
+                            },
+                            {
+                                nodeId: "Destination", sequenceId: 4, released: true, actions: []
                             }
                         ],
-                        edges: [{ edgeId: "edge1_1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "productionunit_1", released: true, actions: [] },
-                            { edgeId: "edge1_2", sequenceId: 3, startNodeId: "productionunit_1", endNodeId: "productionunit_2", released: true, actions: [] }]
+                        edges: [
+                            { edgeId: "edge1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "Destination", released: true, actions: [] },
+                            { edgeId: "edge2", sequenceId: 1, startNodeId: "Destination", endNodeId: "Start", released: true, actions: [] }
+                        ]
                     };
                     return [4, mcClient.publish(vda_5050_lib_1.Topic.Order, middlewareClient, order)];
                 case 2:

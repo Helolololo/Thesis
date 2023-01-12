@@ -51,8 +51,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-var adapterTemplate_1 = require("../../adapterTemplate");
+var AdapterTemplate_1 = require("../../AdapterTemplate");
+var mir_rest_calls_1 = require("../../mir-rest-calls");
+var mir100_json_1 = __importDefault(require("../../configuration/mir100.json"));
+var agvMir = new mir_rest_calls_1.Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 var MirAdapter = (function (_super) {
     __extends(MirAdapter, _super);
     function MirAdapter() {
@@ -68,27 +74,141 @@ var MirAdapter = (function (_super) {
                 command: "move",
                 args: ["forward"],
                 handler: function (args) { return __awaiter(_this, void 0, void 0, function () {
+                    var e_1;
                     return __generator(this, function (_a) {
-                        return [2, {
-                                success: false,
-                                message: "Could not move forward"
-                            }];
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4, this.sendMoveCommand(args[1])];
+                            case 1:
+                                _a.sent();
+                                return [2, {
+                                        success: true,
+                                        message: "Moved"
+                                    }];
+                            case 2:
+                                e_1 = _a.sent();
+                                return [2, {
+                                        success: false,
+                                        message: e_1.message || "Could not move"
+                                    }];
+                            case 3: return [2];
+                        }
                     });
                 }); }
             },
         ];
     };
-    MirAdapter.prototype.recvFromRest = function () {
-        this.handleCommand("move");
+    MirAdapter.prototype.getPositionFromName = function (name) {
+        for (var _i = 0, _a = mir100_json_1["default"].positions; _i < _a.length; _i++) {
+            var p = _a[_i];
+            if (p.name === name) {
+                return p;
+            }
+        }
+        throw new Error("Cannot determine position from given name ".concat(name, " for mir100"));
     };
-    MirAdapter.prototype.sendCommandToRest = function () {
+    MirAdapter.prototype.initPositions = function () {
+    };
+    MirAdapter.prototype.sendMoveCommand = function (endPos) {
         return __awaiter(this, void 0, void 0, function () {
+            var positionName, pos, allMissions, keysMissions, missionMessage, missionid, actionMessage, queuedMissions, keysQueue, lastElementInQueue, i, queueMessage;
             return __generator(this, function (_a) {
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        positionName = endPos.name;
+                        pos = this.getPositionFromName(positionName);
+                        return [4, agvMir.getMissions()];
+                    case 1:
+                        allMissions = _a.sent();
+                        keysMissions = Object.keys(allMissions);
+                        keysMissions.forEach(function (key, index) {
+                            if (allMissions[key].name === "Move to ".concat(positionName)) {
+                                agvMir.deleteMissions(allMissions[key].guid);
+                            }
+                        });
+                        return [4, agvMir.postMissions({
+                                "name": "Move to ".concat(positionName),
+                                "group_id": "mirconst-guid-0000-0001-missiongroup"
+                            })];
+                    case 2:
+                        missionMessage = _a.sent();
+                        missionid = missionMessage["guid"];
+                        return [4, agvMir.postMissionsActions(missionid, {
+                                "action_type": "move",
+                                "mission_id": missionid,
+                                "priority": 1,
+                                "parameters": [
+                                    {
+                                        "id": "position",
+                                        "value": pos.id,
+                                        "guid": pos.id,
+                                        "args": {
+                                            "orientation": pos.theta,
+                                            "pos_x": pos.x,
+                                            "pos_y": pos.y,
+                                            "type_id": 0
+                                        }
+                                    },
+                                    {
+                                        "id": "retries",
+                                        "value": 10
+                                    },
+                                    {
+                                        "id": "max_linear_speed",
+                                        "value": 0.15
+                                    },
+                                    {
+                                        "value": "main",
+                                        "id": "cart_entry_position"
+                                    },
+                                    {
+                                        "value": "main",
+                                        "id": "main_or_entry_position"
+                                    },
+                                    {
+                                        "value": "entry",
+                                        "id": "marker_entry_position"
+                                    },
+                                    {
+                                        "value": 0.1,
+                                        "id": "distance_threshold"
+                                    }
+                                ]
+                            })];
+                    case 3:
+                        actionMessage = _a.sent();
+                        return [4, agvMir.getMission_queue()];
+                    case 4:
+                        queuedMissions = _a.sent();
+                        keysQueue = Object.keys(queuedMissions);
+                        lastElementInQueue = keysQueue[keysQueue.length - 1];
+                        console.log(lastElementInQueue);
+                        console.log(keysQueue[lastElementInQueue].state);
+                        console.log(keysQueue[2636][0]);
+                        i = 0;
+                        keysQueue.forEach(function (key, index) {
+                            i++;
+                            if (i === keysQueue.length - 1) {
+                                console.log(key);
+                                console.log(index);
+                                console.log(keysQueue[key].url);
+                                console.log(keysQueue[key].state);
+                                console.log(keysQueue[key].id);
+                            }
+                        });
+                        return [4, agvMir.postMission_queue({
+                                "mission_id": missionid,
+                                "priority": 0
+                            })];
+                    case 5:
+                        queueMessage = _a.sent();
+                        return [2];
+                }
             });
         });
     };
     return MirAdapter;
-}(adapterTemplate_1.Adapter));
+}(AdapterTemplate_1.Adapter));
 exports["default"] = MirAdapter;
 //# sourceMappingURL=index.js.map

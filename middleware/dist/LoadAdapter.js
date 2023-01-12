@@ -92,12 +92,11 @@ function importModules(directoryPath) {
                     if (!(_a < files_1.length)) return [3, 7];
                     file = files_1[_a];
                     if (!(path.basename(file) === "index.ts" || path.basename(file) === "index.js")) return [3, 6];
-                    return [4, Promise.resolve().then(function () { return __importStar(require("".concat(relativePath, "/").concat(file.slice(0, -3)))); })];
+                    return [4, Promise.resolve().then(function () { return __importStar(require("".concat(relativePath))); })];
                 case 5:
-                    module_1 = _b.sent();
-                    console.log(folder);
-                    console.log(file);
+                    module_1 = (_b.sent())["default"];
                     console.log("module:", module_1);
+                    adapters.push(new module_1());
                     _b.label = 6;
                 case 6:
                     _a++;
@@ -116,5 +115,4 @@ function importModules(directoryPath) {
     });
 }
 exports.importModules = importModules;
-importModules('adapter2');
 //# sourceMappingURL=LoadAdapter.js.map

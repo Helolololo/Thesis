@@ -7,7 +7,9 @@
     "test": "jest --verbose false",
     "start": "tsc && node dist/InterfaceToController.js",
     "startcontroller": "node dist/Controller.js",
-    "build": "tsc"
+    "build": "tsc",
+    "devinterface": "npm run build && npm run start",
+    "dev": "concurrently \"npm run devinterface\" \"npm run startcontroller\""
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,7 @@
   },
   "dependencies": {
     "axios": "^1.1.2",
+    "concurrently": "^7.6.0",
     "glob": "^8.0.3",
     "nodemon": "^2.0.20",
     "puppeteer": "^19.2.0",

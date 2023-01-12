@@ -6,9 +6,8 @@ export interface CommandOutcome {
 export interface Command {
     command: string;
     args?: string[];
-    handler: (args?: string[]) => Promise<CommandOutcome>;
+    handler: (args?: any[]) => Promise<CommandOutcome>;
 }
-
 export abstract class Adapter {
     public constructor() { }
 

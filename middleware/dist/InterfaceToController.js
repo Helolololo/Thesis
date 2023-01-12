@@ -48,7 +48,7 @@ var currentState = {
     headerId: 0,
     lastNodeId: "",
     lastNodeSequenceId: 0,
-    manufacturer: "RobotCompany",
+    manufacturer: "mir",
     nodeStates: [],
     operatingMode: vda_5050_lib_1.OperatingMode.Manual,
     orderId: "",
@@ -60,18 +60,15 @@ var currentState = {
 };
 var currentPosition = {};
 var currentVelocity = {};
-var middlewareClient = { manufacturer: "RobotCompany", serialNumber: "001" };
+var middlewareClient = { manufacturer: "mir", serialNumber: "001" };
 var agvClient = new vda_5050_lib_1.AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
 var messageToLanguageModel = new InternalLangageModel_1.InternalLanguageModel();
 function decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName) {
-    console.log("-- decode Order to move command --");
     var moveCommand = false;
     var startPosition = new InternalLangageModel_1.Pos;
     var endPosition = new InternalLangageModel_1.Pos;
     startPosition.name = startNodeName;
     endPosition.name = nextNodeName;
-    console.log(startNode);
-    console.log(nextNode);
     if (startPosition.name !== endPosition.name) {
         moveCommand = true;
     }
@@ -98,9 +95,7 @@ function decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nex
     }
 }
 function decodeOrderToOtherCommand(robot, otherCommands) {
-    console.log("-- decode Order to other command --");
     if (otherCommands.length !== 0) {
-        console.log("Further actions to perform");
         while (otherCommands.length >= 1) {
             var command = otherCommands[0];
             if (command.actionType === "drop") {

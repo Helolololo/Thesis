@@ -50,6 +50,7 @@ export class InternalLanguageModel {
 }
 
 export class Pos {
+    id?: string;
     name: string;
     x?: number;
     y?: number;

@@ -134,6 +134,17 @@ export class Mir100Client {
     }
 
     /**
+     * GET /mission_queue 
+     * TODO: comments
+     */
+    public async getMission_queue(guid?: String) {
+        if (guid === undefined)
+            return await this.sendRequest("GET", "mission_queue/");
+        else
+            return await this.sendRequest("GET", `mission_queue/${guid}`);
+    }
+
+    /**
      * POST /mission_queue
      * Add a new mission to the mission queue. The mission will always go to the end of the queue
      * Required properties of the body: mission_id

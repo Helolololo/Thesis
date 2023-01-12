@@ -2,11 +2,12 @@
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
 import { importModules } from "./LoadAdapter";
+import { Adapter } from "./AdapterTemplate";
 
 export class PriorityQueue {
     private data = [];
-    private processor;
-    private modules;
+    private wantToProcess;
+    private modules: Adapter[] = [];
 
     private sort() {
         this.data.sort((a, b) => {
@@ -27,9 +28,11 @@ export class PriorityQueue {
 
     public printQueue() {
         //(console.log(data));
+        console.log("| Printing Queue |");
         this.data.forEach(function (item) {
             console.log(item);
         });
+        console.log("| -------------- |");
     }
 
     public listQueue() {
@@ -60,12 +63,12 @@ export class PriorityQueue {
     }
 
     public async startprocessingqueue() {
-        if (this.processor) {
+        if (this.wantToProcess) {
             return;
         }
-        this.processor = setInterval(async () => {
-            if (!this.modules) {
-                this.modules = await importModules("adapter");
+        this.wantToProcess = setInterval(async () => {
+            if (this.modules.length === 0) {
+                this.modules = await importModules("adapter2");
             }
             const itemToQueue = this.dequeue();
             if (!itemToQueue) return;
@@ -78,16 +81,20 @@ export class PriorityQueue {
             const robot = "mir100";
             for (const adapter of this.modules) {
                 if (adapter.getAcceptedRobots().includes(robot)) {
-                    console.log("running command", command, robot);
+                    console.log("Running command", command, robot);
                     const output = await adapter.handleCommand(command, args);
+                    console.log(output);
+                    return;
                 }
             }
+
+            console.log("Failed to find robot to run command", command, args, robot);
 
         }, 50);
     }
 
     public stopprocessingqueue() {
-        clearInterval(this.processor);
+        clearInterval(this.wantToProcess);
     }
 
     // unshift function to add element to the beginning of the queue
