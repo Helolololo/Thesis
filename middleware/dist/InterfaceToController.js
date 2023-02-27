@@ -37,31 +37,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.connectRobot = void 0;
 var vda_5050_lib_1 = require("vda-5050-lib");
 var InternalLangageModel_1 = require("./InternalLangageModel");
-var currentState = {
-    actionStates: [],
-    batteryState: { batteryCharge: 0, charging: false },
-    driving: false,
-    edgeStates: [],
-    errors: [],
-    headerId: 0,
-    lastNodeId: "",
-    lastNodeSequenceId: 0,
-    manufacturer: "mir",
-    nodeStates: [],
-    operatingMode: vda_5050_lib_1.OperatingMode.Manual,
-    orderId: "",
-    orderUpdateId: 0,
-    safetyState: { eStop: vda_5050_lib_1.EStop.None, fieldViolation: false },
-    serialNumber: "001",
-    timestamp: "2022-10-11T11:40:03.12Z",
-    version: "0.0.1"
-};
-var currentPosition = {};
-var currentVelocity = {};
-var middlewareClient = { manufacturer: "mir", serialNumber: "001" };
-var agvClient = new vda_5050_lib_1.AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
+function connectRobot(manufacturer, serialNumber) {
+    return __awaiter(this, void 0, void 0, function () {
+        var middlewareClient, agvClient, currentState, currentPosition, currentVelocity;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    middlewareClient = { manufacturer: manufacturer, serialNumber: serialNumber };
+                    agvClient = new vda_5050_lib_1.AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
+                    currentState = {
+                        actionStates: [],
+                        batteryState: { batteryCharge: 0, charging: false },
+                        driving: false,
+                        edgeStates: [],
+                        errors: [],
+                        headerId: 0,
+                        lastNodeId: "",
+                        lastNodeSequenceId: 0,
+                        manufacturer: manufacturer,
+                        nodeStates: [],
+                        operatingMode: vda_5050_lib_1.OperatingMode.Manual,
+                        orderId: "",
+                        orderUpdateId: 0,
+                        safetyState: { eStop: vda_5050_lib_1.EStop.None, fieldViolation: false },
+                        serialNumber: serialNumber,
+                        timestamp: new Date().toISOString(),
+                        version: "0.0.1"
+                    };
+                    currentPosition = {};
+                    currentVelocity = {};
+                    return [4, agvClient.start()];
+                case 1:
+                    _a.sent();
+                    return [4, agvClient.subscribe(vda_5050_lib_1.Topic.Order, function (originalOrder) {
+                            console.log("!!! Order object received: %o", originalOrder);
+                            var robot = new InternalLangageModel_1.Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
+                            decodeOrder(robot, originalOrder);
+                            agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
+                        })];
+                case 2:
+                    _a.sent();
+                    return [2];
+            }
+        });
+    });
+}
+exports.connectRobot = connectRobot;
 var messageToLanguageModel = new InternalLangageModel_1.InternalLanguageModel();
 function decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName) {
     var moveCommand = false;
@@ -144,30 +168,15 @@ function decodeOrder(robot, order) {
 }
 function main() {
     return __awaiter(this, void 0, void 0, function () {
+        var connectedSubscriptions;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4, agvClient.start()];
-                case 1:
-                    _a.sent();
-                    return [4, agvClient.subscribe(vda_5050_lib_1.Topic.Order, function (originalOrder) {
-                            console.log("Order object received: %o", originalOrder);
-                            var robot = new InternalLangageModel_1.Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
-                            decodeOrder(robot, originalOrder);
-                            agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
-                        })];
-                case 2:
-                    _a.sent();
-                    return [4, agvClient.subscribe(vda_5050_lib_1.Topic.InstantActions, function (instantActions) {
-                            console.log("InstantAction object received: %o", instantActions);
-                            agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
-                        })];
-                case 3:
-                    _a.sent();
-                    setInterval(function () { return agvClient.publish(vda_5050_lib_1.Topic.State, currentState); }, 1000);
-                    return [2];
-            }
+            connectedSubscriptions = {};
+            return [2];
         });
     });
+}
+function combineAgvId(id) {
+    return "".concat(id.manufacturer, "|").concat(id.serialNumber);
 }
 main();
 //# sourceMappingURL=InterfaceToController.js.map

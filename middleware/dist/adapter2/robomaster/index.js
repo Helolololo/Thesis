@@ -18,13 +18,10 @@ exports.__esModule = true;
 var AdapterTemplate_1 = require("../../AdapterTemplate");
 var Robomaster = (function (_super) {
     __extends(Robomaster, _super);
-    function Robomaster() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function Robomaster(ops) {
+        return _super.call(this, ops) || this;
     }
-    Robomaster.prototype.getAcceptedRobots = function () {
-        return [];
-    };
-    Robomaster.prototype.getAcceptedCommands = function () {
+    Robomaster.prototype.supportedCommands = function () {
         return [];
     };
     return Robomaster;

@@ -16,7 +16,7 @@ async function main() {
 
     // PUB ORDER
     // Publish an Order object targeted at a specific AGV.
-    const middlewareClient: AgvId = { manufacturer: "mir", serialNumber: "001" };
+    const middlewareClient: AgvId = { manufacturer: "mir100", serialNumber: "1" };
     const order: Headerless<Order> = {
         orderId: "order0001",
         orderUpdateId: 0,
@@ -53,6 +53,7 @@ async function main() {
         */
 
     };
+
     const orderWithHeader = await mcClient.publish(Topic.Order, middlewareClient, order);
     console.log("Published order %o", orderWithHeader);
 

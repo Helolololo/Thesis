@@ -1,26 +1,20 @@
 /* Created 28.12.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
-import { Adapter, Command } from "../../AdapterTemplate";
+import { Adapter, AdapterOptions, Command } from "../../AdapterTemplate";
 import { Mir100Client } from "../../mir-rest-calls";
-import Mir100Config from "../../configuration/mir100.json";
 import { Pos } from "../../InternalLangageModel";
 
 /* Istantiation of the Mir 100 Client */
+// this.options.authorization
 const agvMir = new Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 
-
-
 export default class MirAdapter extends Adapter {
-    constructor() {
-        super();
+    constructor(ops: AdapterOptions) {
+        super(ops);
     }
 
-    getAcceptedRobots(): string[] {
-        return ["mir100"];
-    }
-
-    getAcceptedCommands(): Command[] {
+    supportedCommands(): Command[] {
         return [
             {
                 command: "move",
@@ -45,7 +39,7 @@ export default class MirAdapter extends Adapter {
     }
 
     getPositionFromName(name: string): Pos {
-        for (const p of Mir100Config.positions) {
+        for (const p of this.ops.positions) {
             if (p.name === name) {
                 return p;
             }

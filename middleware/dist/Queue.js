@@ -42,7 +42,7 @@ var LoadAdapter_1 = require("./LoadAdapter");
 var PriorityQueue = (function () {
     function PriorityQueue() {
         this.data = [];
-        this.modules = [];
+        this.robots = [];
     }
     PriorityQueue.prototype.sort = function () {
         this.data.sort(function (a, b) {
@@ -94,15 +94,15 @@ var PriorityQueue = (function () {
                     return [2];
                 }
                 this.wantToProcess = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                    var _a, itemToQueue, command, args, robot, _i, _b, adapter, output;
+                    var _a, itemToQueue, command, args, id, robot, _i, _b, adapter, output;
                     return __generator(this, function (_c) {
                         switch (_c.label) {
                             case 0:
-                                if (!(this.modules.length === 0)) return [3, 2];
+                                if (!(this.robots.length === 0)) return [3, 2];
                                 _a = this;
                                 return [4, (0, LoadAdapter_1.importModules)("adapter2")];
                             case 1:
-                                _a.modules = _c.sent();
+                                _a.robots = _c.sent();
                                 _c.label = 2;
                             case 2:
                                 itemToQueue = this.dequeue();
@@ -110,8 +110,9 @@ var PriorityQueue = (function () {
                                     return [2];
                                 command = itemToQueue[0];
                                 args = itemToQueue[2];
-                                robot = "mir100";
-                                _i = 0, _b = this.modules;
+                                id = args[0];
+                                robot = "".concat(id.manufacturer, "_").concat(id.robotId);
+                                _i = 0, _b = this.robots;
                                 _c.label = 3;
                             case 3:
                                 if (!(_i < _b.length)) return [3, 6];

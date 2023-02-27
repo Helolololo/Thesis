@@ -38,7 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.Adapter = void 0;
 var Adapter = (function () {
-    function Adapter() {
+    function Adapter(ops) {
+        this.ops = ops;
     }
     Adapter.prototype.handleCommand = function (wantedCommand, args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -55,6 +56,14 @@ var Adapter = (function () {
                 }
             });
         });
+    };
+    Adapter.prototype.getAcceptedRobots = function () {
+        return [this.ops.name];
+    };
+    Adapter.prototype.getAcceptedCommands = function () {
+        var _this = this;
+        var supportedCommands = this.supportedCommands();
+        return supportedCommands.filter(function (v) { return _this.ops.commands.includes(v.command); });
     };
     return Adapter;
 }());

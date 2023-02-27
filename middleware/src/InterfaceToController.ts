@@ -1,37 +1,60 @@
 /* Created 07.10.2022 */
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
-import { State, AgvPosition, Velocity, AgvClient, AgvId, Topic, OperatingMode, EStop, Headerless, Order, NodePosition, Action } from "vda-5050-lib";
+import { State, AgvPosition, Velocity, MasterControlClient, AgvClient, AgvId, Topic, OperatingMode, EStop, Headerless, Order, NodePosition, Action, ConnectionState } from "vda-5050-lib";
 import { InternalLanguageModel, Pos, Robot } from "./InternalLangageModel";
 
-// Initialization of required state information
-const currentState: State = {
-    actionStates: [],
-    batteryState: { batteryCharge: 0, charging: false },
-    driving: false,
-    edgeStates: [],
-    errors: [],
-    headerId: 0,
-    lastNodeId: "",
-    lastNodeSequenceId: 0,
-    manufacturer: "mir",
-    nodeStates: [],
-    operatingMode: OperatingMode.Manual,
-    orderId: "",
-    orderUpdateId: 0,
-    safetyState: { eStop: EStop.None, fieldViolation: false },
-    serialNumber: "001",
-    timestamp: "2022-10-11T11:40:03.12Z",
-    version: "0.0.1"
-};
-const currentPosition = {} as AgvPosition;
-const currentVelocity = {} as Velocity;
+export async function connectRobot(manufacturer, serialNumber) {
+    // // The target AGV.
+    const middlewareClient: AgvId = { manufacturer: manufacturer, serialNumber: serialNumber };
 
-// The target AGV.
-const middlewareClient: AgvId = { manufacturer: "mir", serialNumber: "001" };
+    // // Create instance of AGV Client "001" with minimal options: communication namespace and broker endpoint address.
+    const agvClient = new AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
 
-// Create instance of AGV Client "001" with minimal options: communication namespace and broker endpoint address.
-const agvClient = new AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
+    // Initialization of required state information
+    const currentState: State = {
+        actionStates: [],
+        batteryState: { batteryCharge: 0, charging: false },
+        driving: false,
+        edgeStates: [],
+        errors: [],
+        headerId: 0,
+        lastNodeId: "",
+        lastNodeSequenceId: 0,
+        manufacturer: manufacturer,
+        nodeStates: [],
+        operatingMode: OperatingMode.Manual,
+        orderId: "",
+        orderUpdateId: 0,
+        safetyState: { eStop: EStop.None, fieldViolation: false },
+        serialNumber: serialNumber,
+        timestamp: new Date().toISOString(),
+        version: "0.0.1"
+    };
+    const currentPosition = {} as AgvPosition;
+    const currentVelocity = {} as Velocity;
+
+    await agvClient.start();
+
+    await agvClient.subscribe(Topic.Order, originalOrder => {
+        console.log("Order object received: %o", originalOrder);
+
+        let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
+
+        decodeOrder(robot, originalOrder);
+
+        // Start order handling according to VDA 5050 specification and
+        // report order state changes by publishing State objects.
+        agvClient.publish(Topic.State, currentState);
+    });
+}
+
+
+/*const agvClient = new MasterControlClient({
+    interfaceName: "middleware", transport: {
+        brokerUrl: "mqtt://localhost:1883"
+    }
+});*/
 
 // global variable to be acced by InternalLanguage model
 const messageToLanguageModel = new InternalLanguageModel();
@@ -189,39 +212,68 @@ function decodeOrder(robot: Robot, order: Headerless<Order>) {
 
 async function main() {
     // Start client interaction, connect to MQTT broker.
-    await agvClient.start();
 
-    // SUB ORDER
-    // Observe Order objects emitted by the Master Control Client.
-    await agvClient.subscribe(Topic.Order, originalOrder => {
-        console.log("Order object received: %o", originalOrder);
 
-        let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
+    const connectedSubscriptions: {
+        [key: string]: {
+            order: string,
+            instantActions: string,
+            pubState: NodeJS.Timeout,
+        }
+    } = {};
 
-        decodeOrder(robot, originalOrder);
+    // Track ALL robots connecting and disconnecting from the broker
+    // subscribe for order updates from each robot that connects
+    // agvClient.trackAgvs(async (agvId, connectionState) => {
+    //     console.log(`Got connection from ${agvId}`);
 
-        // Start order handling according to VDA 5050 specification and
-        // report order state changes by publishing State objects.
-        agvClient.publish(Topic.State, currentState);
-    });
+    //     const id = combineAgvId(agvId);
 
-    // SUB INSTANT ACTIONS
-    // Observe InstantActions objects emitted by the Master Control Client.
-    await agvClient.subscribe(Topic.InstantActions, instantActions => {
-        console.log("InstantAction object received: %o", instantActions);
+    //     if (connectionState === ConnectionState.Online) {
 
-        // Start order handling according to VDA 5050 specification and
-        // report order state changes by publishing State objects.
-        agvClient.publish(Topic.State, currentState);
+    //         // ORDERS
+    //         connectedSubscriptions[id].order = 
 
-        // CANCEL ORDER
-    });
+    //         // INSTANT ACTIONS
+    //         await agvClient.subscribe(Topic.InstantActions, agvId, instantActions => {
+    //             console.log("InstantAction object received: %o", instantActions);
 
-    // PUB STATE
-    // Periodically publish state of AGV, even without changes
-    setInterval(
-        () => agvClient.publish(Topic.State, currentState),
-        1000);      // 1 second, to increase later on
+    //             // Start order handling according to VDA 5050 specification and
+    //             // report order state changes by publishing State objects.
+    //             agvClient.publish(Topic.State, agvId, currentState);
+
+    //             // CANCEL ORDER
+    //         });
+
+    //         // PUB STATE
+    //         // Periodically publish state of AGV, even without changes
+    //         connectedSubscriptions[id].pubState = setInterval(
+    //             () => agvClient.publish(Topic.State, agvId, currentState),
+    //             1000);      // 1 second, to increase later on
+
+    //         return;
+    //     }
+
+    //     if (connectionState === ConnectionState.Offline || connectionState === ConnectionState.Connectionbroken) {
+    //         if (connectedSubscriptions[id] === undefined) return;
+    //         agvClient.unsubscribe(connectedSubscriptions[id].order);
+    //         agvClient.unsubscribe(connectedSubscriptions[id].instantActions);
+    //         clearInterval(connectedSubscriptions[id].pubState);
+    //     }
+    // });
+
+    // ORDERS
+    // await agvClient.subscribe(Topic.Order, originalOrder => {
+    //     console.log("Order object received: %o", originalOrder);
+
+    //     let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
+
+    //     decodeOrder(robot, originalOrder);
+
+    //     // Start order handling according to VDA 5050 specification and
+    //     // report order state changes by publishing State objects.
+    //     agvClient.publish(Topic.State, currentState);
+    // });
 
     // PUB VISUALIZATION
     /* // Periodically publish Visualization messages with AgvPosition and Velocity.
@@ -233,6 +285,10 @@ async function main() {
 
     // PUB CONNECTION
     // ?    
+}
+
+function combineAgvId(id: AgvId): string {
+    return `${id.manufacturer}|${id.serialNumber}`;
 }
 
 main();

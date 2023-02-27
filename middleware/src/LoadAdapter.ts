@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Adapter } from './AdapterTemplate';
+import { processConfigs } from './LoadConfiguration';
 
 export async function importModules(directoryPath: string) {
     try {
@@ -11,7 +12,7 @@ export async function importModules(directoryPath: string) {
 
         let adapters = [];
 
-        console.log(folders);
+        const possibleAdaptersList = {};
 
         // Loop through each folder inside the adapter folder to find the index.ts file (adapter) for every mobile robot
         for (const folder of folders) {
@@ -33,15 +34,13 @@ export async function importModules(directoryPath: string) {
                         const { default: module } = await import(`${relativePath}`);
                         console.log("module:", module);
 
-                        // Use the imported module here
-                        // ...
-                        adapters.push(new module());
+                        possibleAdaptersList[folder] = module;
                     }
                 }
             }
         }
 
-        return adapters;
+        return processConfigs(possibleAdaptersList, "configuration");
     } catch (err) {
         console.error(err);
     }

@@ -7,7 +7,7 @@ import { Adapter } from "./AdapterTemplate";
 export class PriorityQueue {
     private data = [];
     private wantToProcess;
-    private modules: Adapter[] = [];
+    private robots: Adapter[] = [];
 
     private sort() {
         this.data.sort((a, b) => {
@@ -67,19 +67,20 @@ export class PriorityQueue {
             return;
         }
         this.wantToProcess = setInterval(async () => {
-            if (this.modules.length === 0) {
-                this.modules = await importModules("adapter2");
+            if (this.robots.length === 0) {
+                this.robots = await importModules("adapter2");
             }
             const itemToQueue = this.dequeue();
             if (!itemToQueue) return;
             const command = itemToQueue[0];
             const args = itemToQueue[2];
+            const id = args[0];
             // TODO: this needs to be processed by the intereface to controller so that we know
             // which robot adapter to contact, for now as this is a test we will always set it to
             // mir
             // const robot = itemToQueue[3];
-            const robot = "mir100";
-            for (const adapter of this.modules) {
+            const robot = `${id.manufacturer}_${id.robotId}`;
+            for (const adapter of this.robots) {
                 if (adapter.getAcceptedRobots().includes(robot)) {
                     console.log("Running command", command, robot);
                     const output = await adapter.handleCommand(command, args);

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --verbose false",
     "start": "tsc && node dist/InterfaceToController.js",
-    "startcontroller": "node dist/Controller.js",
+    "startcontroller": "npm run build && node dist/Controller.js",
     "build": "tsc",
     "devinterface": "npm run build && npm run start",
     "dev": "concurrently \"npm run devinterface\" \"npm run startcontroller\""

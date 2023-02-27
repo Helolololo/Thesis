@@ -47,7 +47,7 @@ function main() {
                 case 0: return [4, mcClient.start()];
                 case 1:
                     _a.sent();
-                    middlewareClient = { manufacturer: "mir", serialNumber: "001" };
+                    middlewareClient = { manufacturer: "mir100", serialNumber: "1" };
                     order = {
                         orderId: "order0001",
                         orderUpdateId: 0,
@@ -58,13 +58,9 @@ function main() {
                             {
                                 nodeId: "Destination", sequenceId: 2, released: true, actions: []
                             },
-                            {
-                                nodeId: "Destination", sequenceId: 4, released: true, actions: []
-                            }
                         ],
                         edges: [
                             { edgeId: "edge1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "Destination", released: true, actions: [] },
-                            { edgeId: "edge2", sequenceId: 1, startNodeId: "Destination", endNodeId: "Start", released: true, actions: [] }
                         ]
                     };
                     return [4, mcClient.publish(vda_5050_lib_1.Topic.Order, middlewareClient, order)];

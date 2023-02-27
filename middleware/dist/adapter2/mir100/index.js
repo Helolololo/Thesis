@@ -51,23 +51,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 exports.__esModule = true;
 var AdapterTemplate_1 = require("../../AdapterTemplate");
 var mir_rest_calls_1 = require("../../mir-rest-calls");
-var mir100_json_1 = __importDefault(require("../../configuration/mir100.json"));
 var agvMir = new mir_rest_calls_1.Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 var MirAdapter = (function (_super) {
     __extends(MirAdapter, _super);
-    function MirAdapter() {
-        return _super.call(this) || this;
+    function MirAdapter(ops) {
+        return _super.call(this, ops) || this;
     }
-    MirAdapter.prototype.getAcceptedRobots = function () {
-        return ["mir100"];
-    };
-    MirAdapter.prototype.getAcceptedCommands = function () {
+    MirAdapter.prototype.supportedCommands = function () {
         var _this = this;
         return [
             {
@@ -100,7 +93,7 @@ var MirAdapter = (function (_super) {
         ];
     };
     MirAdapter.prototype.getPositionFromName = function (name) {
-        for (var _i = 0, _a = mir100_json_1["default"].positions; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.ops.positions; _i < _a.length; _i++) {
             var p = _a[_i];
             if (p.name === name) {
                 return p;
