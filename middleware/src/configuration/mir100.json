@@ -1,0 +1,86 @@
+{
+    "adapterName": "mir100",
+    "robots": [
+        {
+            "name": "mir100_1",
+            "authorization": "Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==",
+            "commands": [
+                "move",
+                "charge"
+            ]
+        },
+        {
+            "name": "mir100_2",
+            "authorization": "",
+            "commands": [
+                "charge",
+                "drop",
+                "pick"
+            ],
+            "specification": {
+                "payload": 100
+            }
+        }
+    ],
+    "positions": [
+        {
+            "name": "Start",
+            "id": "0cc8e129-8ccf-11ed-8ba9-94c691a3e2dc",
+            "x": 5.450,
+            "y": 6.150,
+            "theta": 82.875
+        },
+        {
+            "name": "Destination",
+            "id": "bdbc9b83-8cce-11ed-8ba9-94c691a3e2dc",
+            "x": 8.45,
+            "y": 7.150,
+            "theta": 90.000
+        },
+        {
+            "name": "productionunit_1"
+        },
+        {
+            "name": "Pos Leergebinde-Abgabe",
+            "id": "348376cf-a5be-11ec-afc4-94c691a3e2dc",
+            "x": 2.784,
+            "y": 3.318,
+            "theta": -178.116
+        },
+        {
+            "name": "Pos Voll-Gebindeabnahme",
+            "id": "bbdbecd5-a5ed-11ec-afc4-94c691a3e2dc",
+            "x": 5.667,
+            "y": 2.337,
+            "theta": -93.157
+        },
+        {
+            "name": "Ladestation Intralogistik Labor",
+            "id": "4fee669e-a5db-11ec-afc4-94c691a3e2dc",
+            "x": 7.427,
+            "y": 5.745,
+            "theta": -91.995
+        },
+        {
+            "name": "Position Vollgebinde abgeben II",
+            "id": "3aec560b-a5db-11ec-afc4-94c691a3e2dc",
+            "x": 11.069,
+            "y": 8.564,
+            "theta": -2.170
+        },
+        {
+            "name": "Position Leergebinde abholen",
+            "id": "d3f6c699-cc34-11ec-8cb8-94c691a3e2dc",
+            "x": 2.402,
+            "y": 15.878,
+            "theta": -177.590
+        },
+        {
+            "name": "Pos Vollgebinde an Roboter",
+            "id": "87da50dd-cc3b-11ec-8cb8-94c691a3e2dc",
+            "x": 7.893,
+            "y": 21.143,
+            "theta": 91.422
+        }
+    ]
+}

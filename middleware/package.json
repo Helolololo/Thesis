@@ -1,0 +1,31 @@
+{
+  "name": "middleware",
+  "version": "1.0.0",
+  "description": "",
+  "main": "InterfaceToController.js",
+  "scripts": {
+    "test": "jest --verbose false",
+    "start": "tsc && node dist/InterfaceToController.js",
+    "startcontroller": "npm run build && node dist/Controller.js",
+    "build": "tsc",
+    "devinterface": "npm run build && npm run start",
+    "dev": "concurrently \"npm run devinterface\" \"npm run startcontroller\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/jest": "^29.2.0",
+    "@types/node": "^18.11.9",
+    "jest": "^29.2.2",
+    "ts-jest": "^29.0.3"
+  },
+  "dependencies": {
+    "axios": "^1.1.2",
+    "concurrently": "^7.6.0",
+    "glob": "^8.0.3",
+    "nodemon": "^2.0.20",
+    "puppeteer": "^19.2.0",
+    "require": "^0.4.4"
+  }
+}

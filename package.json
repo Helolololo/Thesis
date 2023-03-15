@@ -1,7 +1,15 @@
 {
   "dependencies": {
+    "@reactivex/rxjs": "^6.6.7",
+    "axios": "^1.2.0",
     "cli": "^1.0.1",
     "json-server": "^0.17.0",
+    "mqtt": "^4.3.7",
+    "require": "^2.4.20",
+    "vda-5050-lib": "^1.2.2",
     "vue": "^3.2.31"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
   }
 }

@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {        // create server
 
     if (req.url === 'api/courses') {
         res.write(JSON.stringify([1, 2, 3]));
-        res,end();
+        res.end();
     }
 });
 

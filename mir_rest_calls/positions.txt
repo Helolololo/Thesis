@@ -1,0 +1,76 @@
+c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc
+
+	
+Response body
+[
+  {
+    "url": "/v2.0.0/positions/d3dc5fa8-a5da-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "d3dc5fa8-a5da-11ec-afc4-94c691a3e2dc",
+    "name": "Pos Leergebinde-Abgabe",
+    "type_id": 11
+  },
+  {
+    "url": "/v2.0.0/positions/d3f3d265-a5da-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "d3f3d265-a5da-11ec-afc4-94c691a3e2dc",
+    "name": "Pos Leergebinde-Abgabe",
+    "type_id": 12
+  },
+  {
+    "url": "/v2.0.0/positions/12cba7ae-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "12cba7ae-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Gebindeaufnahme Position Test",
+    "type_id": 11
+  },
+  {
+    "url": "/v2.0.0/positions/12e2d59c-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "12e2d59c-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Gebindeaufnahme Position Test",
+    "type_id": 12
+  },
+  {
+    "url": "/v2.0.0/positions/3aec560b-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "3aec560b-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Position Vollgebinde abgeben II",
+    "type_id": 11
+  },
+  {
+    "url": "/v2.0.0/positions/3b026ee2-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "3b026ee2-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Position Vollgebinde abgeben II",
+    "type_id": 12
+  },
+  {
+    "url": "/v2.0.0/positions/4fee669e-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "4fee669e-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Ladestation Intralogistik Labor",
+    "type_id": 7
+  },
+  {
+    "url": "/v2.0.0/positions/50307e39-a5db-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "50307e39-a5db-11ec-afc4-94c691a3e2dc",
+    "name": "Ladestation Intralogistik Labor",
+    "type_id": 8
+  },
+  {
+    "url": "/v2.0.0/positions/5e25b647-a5f0-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "5e25b647-a5f0-11ec-afc4-94c691a3e2dc",
+    "name": "Pos Voll-Gebindeaufnahme",
+    "type_id": 11
+  },
+  {
+    "url": "/v2.0.0/positions/5e3520c8-a5f0-11ec-afc4-94c691a3e2dc",
+    "map": "/v2.0.0/maps/c5e4eca1-a5d5-11ec-afc4-94c691a3e2dc",
+    "guid": "5e3520c8-a5f0-11ec-afc4-94c691a3e2dc",
+    "name": "Pos Voll-Gebindeaufnahme",
+    "type_id": 12
+  }
+]
