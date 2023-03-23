@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -74,6 +74,7 @@ exports.processConfigs = void 0;
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
 var InterfaceToController_1 = require("./InterfaceToController");
+var process = __importStar(require("process"));
 function processConfigs(possibleAdapters, configurationPath) {
     return __awaiter(this, void 0, void 0, function () {
         var relativePathConfiguration, robots, files, _i, files_1, file, config, _a, _b, adapter, _c, _d, robotConfig, extraOps, ops, id, err_1;
@@ -81,7 +82,7 @@ function processConfigs(possibleAdapters, configurationPath) {
             switch (_e.label) {
                 case 0:
                     _e.trys.push([0, 9, , 10]);
-                    relativePathConfiguration = "".concat(__dirname, "\\").concat(configurationPath);
+                    relativePathConfiguration = "".concat(process.cwd(), "\\").concat(configurationPath);
                     robots = [];
                     return [4, fs.promises.readdir(relativePathConfiguration)];
                 case 1:

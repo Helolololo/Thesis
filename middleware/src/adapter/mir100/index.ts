@@ -2,23 +2,25 @@
 /*! Author: Mai Khanh Isabelle Wilhelm */
 
 import { Adapter, AdapterOptions, Command } from "../../AdapterTemplate";
-import { Mir100Client } from "../../mir-rest-calls";
+import { Mir100Client } from "./mir-rest-calls";
 import { Pos } from "../../InternalLangageModel";
 
 /* Istantiation of the Mir 100 Client */
 // this.options.authorization
-const agvMir = new Mir100Client('Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==');
 
 export default class MirAdapter extends Adapter {
+    client: Mir100Client;
+
     constructor(ops: AdapterOptions) {
         super(ops);
+        this.client = new Mir100Client(this.ops.authorization);
     }
 
     supportedCommands(): Command[] {
         return [
             {
                 command: "move",
-                args: ["forward"],
+                args: [],
                 handler: async (args) => {
                     try {
                         await this.sendMoveCommand(args[1]);
@@ -60,21 +62,21 @@ export default class MirAdapter extends Adapter {
         const pos = this.getPositionFromName(positionName);
 
         // check whether a mission with name "Move to {positionName}" has already been created
-        var allMissions = await agvMir.getMissions();
+        var allMissions = await this.client.getMissions();
         const keysMissions = Object.keys(allMissions);
 
 
         keysMissions.forEach((key, index) => {
             //console.log(`${key}: ${allMissions[key]}`);
             if (allMissions[key].name === `Move to ${positionName}`) {
-                agvMir.deleteMissions(allMissions[key].guid);
+                this.client.deleteMissions(allMissions[key].guid);
             }
         });
 
 
         // create a new mission
         var missionMessage =
-            await agvMir.postMissions({
+            await this.client.postMissions({
                 "name": `Move to ${positionName}`,
                 "group_id": "mirconst-guid-0000-0001-missiongroup"
             });
@@ -83,7 +85,7 @@ export default class MirAdapter extends Adapter {
 
         // create new actions for the created mission
         var actionMessage =
-            await agvMir.postMissionsActions(missionid, {
+            await this.client.postMissionsActions(missionid, {
                 "action_type": "move",
                 "mission_id": missionid,
                 "priority": 1,
@@ -131,7 +133,7 @@ export default class MirAdapter extends Adapter {
 
         // if the last element in the mission queue has state done or executed the queue is not empty and therefore the priority needs to be zero
         // if the last element in the mission queue has state executing or pending the queue is not empty and therefore the priority needs to be increased
-        var queuedMissions = await agvMir.getMission_queue();
+        var queuedMissions = await this.client.getMission_queue();
         //console.log(queuedMissions);
         const keysQueue = Object.keys(queuedMissions);
         const lastElementInQueue = keysQueue[keysQueue.length - 1];        // last element in array
@@ -155,7 +157,7 @@ export default class MirAdapter extends Adapter {
 
 
         // add mission to queue
-        var queueMessage = await agvMir.postMission_queue({
+        var queueMessage = await this.client.postMission_queue({
             "mission_id": missionid,
             "priority": 0
         });

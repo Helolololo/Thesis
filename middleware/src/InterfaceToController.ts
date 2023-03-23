@@ -11,6 +11,29 @@ export async function connectRobot(manufacturer, serialNumber) {
     // // Create instance of AGV Client "001" with minimal options: communication namespace and broker endpoint address.
     const agvClient = new AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
 
+    const currentPosition = {} as AgvPosition;
+    const currentVelocity = {} as Velocity;
+
+    await agvClient.start();
+
+    await agvClient.subscribe(Topic.Order, originalOrder => {
+        console.log("Order object received: %o", originalOrder);
+
+        let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
+
+        decodeOrder(robot, originalOrder);
+    });
+
+    await agvClient.subscribe(Topic.InstantActions, originalOrder => { });
+
+    const sendAgvState = setInterval(() => sendState(agvClient, manufacturer, serialNumber), 30000);
+}
+
+function sendState(agvClient, manufacturer, serialNumber) {
+    // Start order handling according to VDA 5050 specification and
+    // report order state changes by publishing State objects.
+    // state command -> requests state from mobile robot
+
     // Initialization of required state information
     const currentState: State = {
         actionStates: [],
@@ -31,24 +54,14 @@ export async function connectRobot(manufacturer, serialNumber) {
         timestamp: new Date().toISOString(),
         version: "0.0.1"
     };
-    const currentPosition = {} as AgvPosition;
-    const currentVelocity = {} as Velocity;
 
-    await agvClient.start();
-
-    await agvClient.subscribe(Topic.Order, originalOrder => {
-        console.log("Order object received: %o", originalOrder);
-
-        let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
-
-        decodeOrder(robot, originalOrder);
-
-        // Start order handling according to VDA 5050 specification and
-        // report order state changes by publishing State objects.
-        agvClient.publish(Topic.State, currentState);
-    });
+    // getStatusFromInternalLanguageModel()
+    agvClient.publish(Topic.State, currentState);
 }
 
+function stopStateSending(sendAgvState) {
+    clearInterval(sendAgvState);
+}
 
 /*const agvClient = new MasterControlClient({
     interfaceName: "middleware", transport: {
@@ -144,6 +157,11 @@ function decodeOrderToOtherCommand(robot: Robot, otherCommands: Action[]) {
                 decodeOrderToChargeCommand(robot);
             }
 
+            // MOVEFORWARD
+            else if (command.actionType === "moveForward") {
+                decodeOrderToMoveForwardCommand(robot, otherCommands[0]);
+            }
+
             // remove the first element of actions
             otherCommands = otherCommands.splice(1);
         }
@@ -160,6 +178,21 @@ function decodeOrderToPickCommand(robot: Robot) {
 
 function decodeOrderToChargeCommand(robot: Robot) {
     messageToLanguageModel.charge(robot);
+}
+
+function decodeOrderToMoveForwardCommand(robot: Robot, otherCommands: Action) {
+    let distance = 0;
+    let direction = 0;
+
+
+    for (const param of otherCommands.actionParameters) {
+        if (param.key === "distance") {
+            distance = Number(param.value);
+        } else if (param.key === "direction") {
+            direction = Number(param.value);
+        }
+    }
+    messageToLanguageModel.moveForward(robot, distance, direction);
 }
 
 function decodeOrder(robot: Robot, order: Headerless<Order>) {
@@ -180,6 +213,7 @@ function decodeOrder(robot: Robot, order: Headerless<Order>) {
     let startNodeName: string;
     let nextNodeName: string;
     let otherCommands: Action[];
+    let otherEdgeCommands: Action[];
 
     console.log("-- decode Order --");
 
@@ -195,9 +229,13 @@ function decodeOrder(robot: Robot, order: Headerless<Order>) {
         startNodeName = order.nodes[0].nodeId;
         nextNodeName = order.nodes[1].nodeId;
         otherCommands = order.nodes[1].actions;
+        otherEdgeCommands = order.edges[0].actions;
 
         // check whether current node and the next node differ --> move command ?
         decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName);
+
+        // checks whether there is an action at the edge --> other command (moveForward)?
+        decodeOrderToOtherCommand(robot, otherEdgeCommands);
 
         // checks whether there is an action at the next node --> other command (drop, pick, charge command,...)?
         decodeOrderToOtherCommand(robot, otherCommands);
@@ -260,19 +298,6 @@ async function main() {
     //         agvClient.unsubscribe(connectedSubscriptions[id].instantActions);
     //         clearInterval(connectedSubscriptions[id].pubState);
     //     }
-    // });
-
-    // ORDERS
-    // await agvClient.subscribe(Topic.Order, originalOrder => {
-    //     console.log("Order object received: %o", originalOrder);
-
-    //     let robot = new Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);  // TODO maybe inside the loop?
-
-    //     decodeOrder(robot, originalOrder);
-
-    //     // Start order handling according to VDA 5050 specification and
-    //     // report order state changes by publishing State objects.
-    //     agvClient.publish(Topic.State, currentState);
     // });
 
     // PUB VISUALIZATION

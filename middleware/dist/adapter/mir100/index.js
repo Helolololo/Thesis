@@ -53,7 +53,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var AdapterTemplate_1 = require("../../AdapterTemplate");
-var mir_rest_calls_1 = require("../../mir-rest-calls");
+var mir_rest_calls_1 = require("./mir-rest-calls");
 var MirAdapter = (function (_super) {
     __extends(MirAdapter, _super);
     function MirAdapter(ops) {

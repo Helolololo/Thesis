@@ -15,7 +15,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -100,7 +100,7 @@ var PriorityQueue = (function () {
                             case 0:
                                 if (!(this.robots.length === 0)) return [3, 2];
                                 _a = this;
-                                return [4, (0, LoadAdapter_1.importModules)("adapter2")];
+                                return [4, (0, LoadAdapter_1.importModules)("adapter")];
                             case 1:
                                 _a.robots = _c.sent();
                                 _c.label = 2;
@@ -111,6 +111,8 @@ var PriorityQueue = (function () {
                                 command = itemToQueue[0];
                                 args = itemToQueue[2];
                                 id = args[0];
+                                console.log("!!!!!!!!!!!!!!!");
+                                console.log(itemToQueue[2]);
                                 robot = "".concat(id.manufacturer, "_").concat(id.robotId);
                                 _i = 0, _b = this.robots;
                                 _c.label = 3;

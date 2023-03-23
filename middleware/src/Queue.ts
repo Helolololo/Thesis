@@ -68,17 +68,17 @@ export class PriorityQueue {
         }
         this.wantToProcess = setInterval(async () => {
             if (this.robots.length === 0) {
-                this.robots = await importModules("adapter2");
+                this.robots = await importModules("adapter");
             }
             const itemToQueue = this.dequeue();
             if (!itemToQueue) return;
             const command = itemToQueue[0];
             const args = itemToQueue[2];
             const id = args[0];
-            // TODO: this needs to be processed by the intereface to controller so that we know
-            // which robot adapter to contact, for now as this is a test we will always set it to
-            // mir
-            // const robot = itemToQueue[3];
+            console.log("!!!!!!!!!!!!!!!");
+            console.log(itemToQueue[2]);
+
+
             const robot = `${id.manufacturer}_${id.robotId}`;
             for (const adapter of this.robots) {
                 if (adapter.getAcceptedRobots().includes(robot)) {

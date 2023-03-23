@@ -1,0 +1,14 @@
+{
+    "adapterName": "robomaster",
+    "robots": [
+        {
+            "name": "robomaster_1",
+            "authorization": "",
+            "commands": [
+                "moveForward",
+                "drop",
+                "pick"
+            ]
+        }
+    ]
+}

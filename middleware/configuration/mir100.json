@@ -17,7 +17,7 @@
                 "drop",
                 "pick"
             ],
-            "specification": {
+            "specifications": {
                 "payload": 100
             }
         }

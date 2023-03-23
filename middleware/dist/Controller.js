@@ -15,7 +15,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -39,35 +39,68 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var vda_5050_lib_1 = require("vda-5050-lib");
 var mcClient = new vda_5050_lib_1.MasterControlClient({ interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
-function main() {
+function sendTestOrder(manufacturer, serialNumber) {
     return __awaiter(this, void 0, void 0, function () {
-        var middlewareClient, order, orderWithHeader, stateSubscriptionId;
+        var middlewareClient, order, orderWithHeader;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4, mcClient.start()];
-                case 1:
-                    _a.sent();
-                    middlewareClient = { manufacturer: "mir100", serialNumber: "1" };
+                case 0:
+                    middlewareClient = { manufacturer: "robomaster", serialNumber: "1" };
                     order = {
                         orderId: "order0001",
                         orderUpdateId: 0,
                         nodes: [
                             {
-                                nodeId: "productionunit_1", sequenceId: 0, released: true, actions: []
+                                nodeId: "Start", sequenceId: 0, released: true, actions: []
                             },
                             {
-                                nodeId: "Destination", sequenceId: 2, released: true, actions: []
+                                nodeId: "Start", sequenceId: 2, released: true, actions: []
                             },
                         ],
                         edges: [
-                            { edgeId: "edge1", sequenceId: 1, startNodeId: "productionunit_1", endNodeId: "Destination", released: true, actions: [] },
+                            {
+                                edgeId: "edge1", sequenceId: 1, startNodeId: "Start", endNodeId: "Start", released: true, actions: [
+                                    {
+                                        "actionId": "A-n1-001",
+                                        "actionType": "moveForward",
+                                        "blockingType": vda_5050_lib_1.BlockingType.Hard,
+                                        "actionParameters": [
+                                            {
+                                                "key": "distance",
+                                                "value": 1
+                                            },
+                                            {
+                                                "key": "direction",
+                                                "value": 0
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
                         ]
                     };
                     return [4, mcClient.publish(vda_5050_lib_1.Topic.Order, middlewareClient, order)];
-                case 2:
+                case 1:
                     orderWithHeader = _a.sent();
                     console.log("Published order %o", orderWithHeader);
-                    return [4, mcClient.subscribe(vda_5050_lib_1.Topic.State, middlewareClient, function (state) {
+                    return [2];
+            }
+        });
+    });
+}
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
+        var middlewareClientRecv, stateSubscriptionId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4, mcClient.start()];
+                case 1:
+                    _a.sent();
+                    return [4, sendTestOrder("mir100", "1")];
+                case 2:
+                    _a.sent();
+                    middlewareClientRecv = { manufacturer: "mir100", serialNumber: undefined };
+                    return [4, mcClient.subscribe(vda_5050_lib_1.Topic.State, middlewareClientRecv, function (state) {
                             console.log("State object received: %o", state);
                         })];
                 case 3:

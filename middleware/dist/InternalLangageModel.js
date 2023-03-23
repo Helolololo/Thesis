@@ -12,24 +12,23 @@ var InternalLanguageModel = (function () {
         prioQueue.enqueue(['move', 2, []]);
     };
     InternalLanguageModel.prototype.move = function (robot, endPosition, startPosition, speed) {
-        console.log("Move Command");
-        console.log("Robot: %o", robot);
-        console.log("Start: %o", startPosition);
-        console.log("End: %o", endPosition);
         prioQueue.enqueue(['move', 2, [robot, endPosition, startPosition, speed]]);
         prioQueue.printQueue();
     };
     InternalLanguageModel.prototype.pick = function (robot) {
-        prioQueue.enqueue(['pick', 2, [], 'mir100']);
+        prioQueue.enqueue(['pick', 2, [robot]]);
     };
     InternalLanguageModel.prototype.drop = function (robot) {
-        prioQueue.enqueue(['drop', 2, [], 'mir100']);
+        prioQueue.enqueue(['drop', 2, [robot]]);
     };
     InternalLanguageModel.prototype.charge = function (robot) {
-        prioQueue.enqueue(['charge', 2, [], 'mir100']);
+        prioQueue.enqueue(['charge', 2, [robot]]);
+    };
+    InternalLanguageModel.prototype.moveForward = function (robot, distance, direction) {
+        prioQueue.enqueue(['moveForward', 2, [robot, distance, direction]]);
     };
     InternalLanguageModel.prototype.cancel = function (robot) {
-        prioQueue.enqueue(['cancel', 1, [], 'mir100']);
+        prioQueue.enqueue(['cancel', 1, [robot]]);
     };
     return InternalLanguageModel;
 }());
@@ -42,8 +41,8 @@ var Pos = (function () {
 exports.Pos = Pos;
 var Speed = (function () {
     function Speed() {
-        this.linearSpeedDesired = 0;
-        this.angularSpeedDesired = 0;
+        this.linearSpeedDesired = 0.5;
+        this.angularSpeedDesired = 0.5;
     }
     return Speed;
 }());

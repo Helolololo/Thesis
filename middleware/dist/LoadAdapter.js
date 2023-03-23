@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -67,6 +67,7 @@ function importModules(directoryPath) {
     return __awaiter(this, void 0, void 0, function () {
         var relativePathAdapter, relativePath, folders, adapters, possibleAdaptersList, _i, folders_1, folder, files, _a, files_1, file, module_1, err_1;
         return __generator(this, function (_b) {
+            var _c;
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 9, , 10]);
@@ -93,7 +94,7 @@ function importModules(directoryPath) {
                     if (!(_a < files_1.length)) return [3, 7];
                     file = files_1[_a];
                     if (!(path.basename(file) === "index.ts" || path.basename(file) === "index.js")) return [3, 6];
-                    return [4, Promise.resolve().then(function () { return __importStar(require("".concat(relativePath))); })];
+                    return [4, (_c = "".concat(relativePath), Promise.resolve().then(function () { return __importStar(require(_c)); }))];
                 case 5:
                     module_1 = (_b.sent())["default"];
                     console.log("module:", module_1);

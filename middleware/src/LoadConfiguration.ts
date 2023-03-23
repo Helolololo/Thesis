@@ -2,16 +2,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Adapter } from './AdapterTemplate';
 import { connectRobot } from './InterfaceToController';
+import * as process from 'process';
+
 
 export async function processConfigs(possibleAdapters: { [key: string]: any }, configurationPath: string) {
     try {
-        const relativePathConfiguration = `${__dirname}\\${configurationPath}`;
+        const relativePathConfiguration = `${process.cwd()}\\${configurationPath}`;
         let robots = [];
 
         // Read all folders and files in the directory
         const files = await fs.promises.readdir(relativePathConfiguration);
 
-        // Loop through each siles inside the folder within the adapter folder to find the index.ts file (adapter) for every mobile robot
+        // Loop through each files inside the folder within the config folder 
         for (const file of files) {
             if (path.extname(file) === ".json") {
                 const config = JSON.parse(await fs.promises.readFile(`${relativePathConfiguration}/${file}`, {

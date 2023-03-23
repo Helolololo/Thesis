@@ -13,7 +13,7 @@ export interface DefaultAdapterOptions {
     name: string;
     commands: string[];
     authorization: string;
-    specification: { [key: string]: any };
+    specifications: { [key: string]: any };
 }
 
 export type AdapterOptions = { [key: string]: any } & DefaultAdapterOptions;
@@ -26,7 +26,7 @@ export abstract class Adapter {
     public async handleCommand(wantedCommand: string, args?: string[]): Promise<CommandOutcome> {
         const commands = this.getAcceptedCommands();
 
-        // check if command exists
+        // check if command exists in adapter
         const command = commands.find((c) => c.command === wantedCommand);
 
         // execute handler

@@ -15,7 +15,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -42,50 +42,59 @@ var vda_5050_lib_1 = require("vda-5050-lib");
 var InternalLangageModel_1 = require("./InternalLangageModel");
 function connectRobot(manufacturer, serialNumber) {
     return __awaiter(this, void 0, void 0, function () {
-        var middlewareClient, agvClient, currentState, currentPosition, currentVelocity;
+        var middlewareClient, agvClient, currentPosition, currentVelocity, sendAgvState;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     middlewareClient = { manufacturer: manufacturer, serialNumber: serialNumber };
                     agvClient = new vda_5050_lib_1.AgvClient(middlewareClient, { interfaceName: "middleware", transport: { brokerUrl: "mqtt://localhost:1883" } });
-                    currentState = {
-                        actionStates: [],
-                        batteryState: { batteryCharge: 0, charging: false },
-                        driving: false,
-                        edgeStates: [],
-                        errors: [],
-                        headerId: 0,
-                        lastNodeId: "",
-                        lastNodeSequenceId: 0,
-                        manufacturer: manufacturer,
-                        nodeStates: [],
-                        operatingMode: vda_5050_lib_1.OperatingMode.Manual,
-                        orderId: "",
-                        orderUpdateId: 0,
-                        safetyState: { eStop: vda_5050_lib_1.EStop.None, fieldViolation: false },
-                        serialNumber: serialNumber,
-                        timestamp: new Date().toISOString(),
-                        version: "0.0.1"
-                    };
                     currentPosition = {};
                     currentVelocity = {};
                     return [4, agvClient.start()];
                 case 1:
                     _a.sent();
                     return [4, agvClient.subscribe(vda_5050_lib_1.Topic.Order, function (originalOrder) {
-                            console.log("!!! Order object received: %o", originalOrder);
+                            console.log("Order object received: %o", originalOrder);
                             var robot = new InternalLangageModel_1.Robot(middlewareClient.manufacturer, middlewareClient.serialNumber);
                             decodeOrder(robot, originalOrder);
-                            agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
                         })];
                 case 2:
                     _a.sent();
+                    return [4, agvClient.subscribe(vda_5050_lib_1.Topic.InstantActions, function (originalOrder) { })];
+                case 3:
+                    _a.sent();
+                    sendAgvState = setInterval(function () { return sendState(agvClient, manufacturer, serialNumber); }, 30000);
                     return [2];
             }
         });
     });
 }
 exports.connectRobot = connectRobot;
+function sendState(agvClient, manufacturer, serialNumber) {
+    var currentState = {
+        actionStates: [],
+        batteryState: { batteryCharge: 0, charging: false },
+        driving: false,
+        edgeStates: [],
+        errors: [],
+        headerId: 0,
+        lastNodeId: "",
+        lastNodeSequenceId: 0,
+        manufacturer: manufacturer,
+        nodeStates: [],
+        operatingMode: vda_5050_lib_1.OperatingMode.Manual,
+        orderId: "",
+        orderUpdateId: 0,
+        safetyState: { eStop: vda_5050_lib_1.EStop.None, fieldViolation: false },
+        serialNumber: serialNumber,
+        timestamp: new Date().toISOString(),
+        version: "0.0.1"
+    };
+    agvClient.publish(vda_5050_lib_1.Topic.State, currentState);
+}
+function stopStateSending(sendAgvState) {
+    clearInterval(sendAgvState);
+}
 var messageToLanguageModel = new InternalLangageModel_1.InternalLanguageModel();
 function decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName) {
     var moveCommand = false;
@@ -131,6 +140,9 @@ function decodeOrderToOtherCommand(robot, otherCommands) {
             else if (command.actionType === "startCharging" || command.actionType === "stopCharging") {
                 decodeOrderToChargeCommand(robot);
             }
+            else if (command.actionType === "moveForward") {
+                decodeOrderToMoveForwardCommand(robot, otherCommands[0]);
+            }
             otherCommands = otherCommands.splice(1);
         }
     }
@@ -144,12 +156,27 @@ function decodeOrderToPickCommand(robot) {
 function decodeOrderToChargeCommand(robot) {
     messageToLanguageModel.charge(robot);
 }
+function decodeOrderToMoveForwardCommand(robot, otherCommands) {
+    var distance = 0;
+    var direction = 0;
+    for (var _i = 0, _a = otherCommands.actionParameters; _i < _a.length; _i++) {
+        var param = _a[_i];
+        if (param.key === "distance") {
+            distance = Number(param.value);
+        }
+        else if (param.key === "direction") {
+            direction = Number(param.value);
+        }
+    }
+    messageToLanguageModel.moveForward(robot, distance, direction);
+}
 function decodeOrder(robot, order) {
     var startNode;
     var nextNode;
     var startNodeName;
     var nextNodeName;
     var otherCommands;
+    var otherEdgeCommands;
     console.log("-- decode Order --");
     otherCommands = order.nodes[0].actions;
     decodeOrderToOtherCommand(robot, otherCommands);
@@ -159,7 +186,9 @@ function decodeOrder(robot, order) {
         startNodeName = order.nodes[0].nodeId;
         nextNodeName = order.nodes[1].nodeId;
         otherCommands = order.nodes[1].actions;
+        otherEdgeCommands = order.edges[0].actions;
         decodeOrderToMoveCommand(robot, startNode, nextNode, startNodeName, nextNodeName);
+        decodeOrderToOtherCommand(robot, otherEdgeCommands);
         decodeOrderToOtherCommand(robot, otherCommands);
         order.nodes = order.nodes.splice(1);
         order.edges = order.edges.splice(1);
